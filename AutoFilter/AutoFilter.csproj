@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Denis Tsvettsikh</Authors>
+    <RepositoryUrl>https://github.com/denis-tsv/AutoFilter</RepositoryUrl>
+    <PackageTags>filter;automatic;specification;expression;linq</PackageTags>
+    <PackageProjectUrl>https://github.com/denis-tsv/AutoFilter</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Copyright Denis Tsvettsikh</Copyright>
+    <Description>AutoFilter allows to generate LinqExpression by DTO and pass this expression to ORM for SQL generation and database filtration or compile expression to delegate for in-memory filtration</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/denis-tsv/AutoFilter/master/assets/logo/logo-128x128.png</PackageIconUrl>
+  </PropertyGroup>
+
+</Project>
