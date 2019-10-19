@@ -11,6 +11,8 @@
     <Copyright>Copyright Denis Tsvettsikh</Copyright>
     <Description>AutoFilter allows to generate LinqExpression by DTO and pass this expression to ORM for SQL generation and database filtration or compile expression to delegate for in-memory filtration</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/denis-tsv/AutoFilter/master/assets/logo/logo-128x128.png</PackageIconUrl>
+    <Product>Universal.AutoFilter</Product>
+    <PackageId>Universal.AutoFilter</PackageId>
   </PropertyGroup>
 
 </Project>
