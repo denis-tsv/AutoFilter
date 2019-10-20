@@ -22,7 +22,10 @@ namespace Tests.EF
             Expression<Func<NestedItem, bool>> ex = (x) => x.Int > 1;
             
             // act
-            var filtered = Context.NavigationPropertyItems.Include(x => x.NestedItem).Where(x => x.NestedItem, ex).ToList();
+            var filtered = Context.NavigationPropertyItems
+                .Include(x => x.NestedItem)
+                .Where(x => x.NestedItem, ex) // filter by nested property
+                .ToList();
 
             //assert
             Assert.Equal(1, filtered.Count);
@@ -36,7 +39,10 @@ namespace Tests.EF
             Expression<Func<NavigationPropertyItem, bool>> ex = (x) => x.Id > 3;
 
             // act
-            var filtered = Context.NestedItems.Include(x => x.NavigationPropertyItems).WhereAny(x => x.NavigationPropertyItems, ex).ToList();
+            var filtered = Context.NestedItems
+                .Include(x => x.NavigationPropertyItems)
+                .WhereAny(x => x.NavigationPropertyItems, ex) // filter by nested collection
+                .ToList();
 
             //assert
             Assert.Equal(6, filtered.Count);
