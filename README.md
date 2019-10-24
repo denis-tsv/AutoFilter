@@ -47,22 +47,22 @@ public class ProductFilter
 ```csharp
 public class ProductController : Controller
 {
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
-	{
-		var products = DbContext.Products;
-		
-		if (!string.IsNullOrEmpty(filter.Name))
-			products = products.Where(x => x.Name.Contains(filter.Name));
-			
-		if (!filter.CostFrom.HasValue)
-			products = products.Where(x => x.Cost >= filter.CostFrom.Value);
-		
-		if (!filter.CostTo.HasValue)
-			products = products.Where(x => x.Cost <= filter.CostTo.Value);
-		
-		return products.ToListAsync();
-	}
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {
+        var products = DbContext.Products;
+        
+        if (!string.IsNullOrEmpty(filter.Name))
+            products = products.Where(x => x.Name.Contains(filter.Name));
+            
+        if (!filter.CostFrom.HasValue)
+            products = products.Where(x => x.Cost >= filter.CostFrom.Value);
+        
+        if (!filter.CostTo.HasValue)
+            products = products.Where(x => x.Cost <= filter.CostTo.Value);
+        
+        return products.ToListAsync();
+    }
 }
 ```
 
@@ -71,14 +71,14 @@ AutoFilter allows to automatically generate LINQ expression by filter DTO like t
 ```csharp
 public class ProductController : Controller
 {
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
-	{
-		return DbContext
-			.Products
-			.AutoFilter(filter) // < - AutoFilter in action
-			.ToListAsync();
-	}
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {
+        return DbContext
+            .Products
+            .AutoFilter(filter) // < - AutoFilter in action
+            .ToListAsync();
+    }
 }
 ```
 
@@ -121,11 +121,11 @@ AutoFilter allows to compare all value types (bool, DateTime, numeric types as i
 ```csharp
 public class ProductFilter
 {
-	[FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.GreaterOrEqual)]
-	public int? CostFrom { get; set; }
-	
-	[FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.LessOrEqual)]
-	public int? CostTo { get; set; }
+    [FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.GreaterOrEqual)]
+    public int? CostFrom { get; set; }
+    
+    [FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.LessOrEqual)]
+    public int? CostTo { get; set; }
 }
 ```
 
@@ -139,9 +139,9 @@ AutoFilter includes in LINQ expression properties of filter DTO which contains n
 
 ```csharp
 return DbContext
-	.Products
-	.AutoFilter(filter, ComposeKind.Or) 
-	.ToListAsync();
+    .Products
+    .AutoFilter(filter, ComposeKind.Or) 
+    .ToListAsync();
 ```
 
 ## Navigation properties
@@ -198,8 +198,8 @@ If value type in filter DTO does not correspond to value in entity property (for
 ```csharp
 public enum ProductState
 {
-	Available,
-	NotAvailable
+    Available,
+    NotAvailable
 }
 
 public class Product
@@ -209,10 +209,10 @@ public class Product
 
 public class StringToEnumConverter : IFilverValueConverter
 {
-	public object Convert(object value)
-	{
-		return Enum.Parse(typeof(ProductState), (string)value);
-	}
+    public object Convert(object value)
+    {
+        return Enum.Parse(typeof(ProductState), (string)value);
+    }
 }
 
 public class ProductFilter
@@ -241,29 +241,29 @@ In many scenarios queries contains duplicated filter conditions. For example we 
 ```csharp
 public class Product
 {
-	public bool IsAvailable { get; set; }
-	public DateTime CreationDate { get; set; }
+    public bool IsAvailable { get; set; }
+    public DateTime CreationDate { get; set; }
 }
 
 public class ProductController : Controller
 {
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetNewProducts()
-	{
-		return DbContext
-			.Products
-			.Where(x => x.IsAvailable && (DateTime.Now - x.CreationDate).TotalDays < 30)			
-			.ToListAsync();
-	}
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetAllProducts()
-	{
-		return DbContext
-			.Products
-			.Where(x => x.IsAvailable)			
-			.ToListAsync();
-	}
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetNewProducts()
+    {
+        return DbContext
+            .Products
+            .Where(x => x.IsAvailable && (DateTime.Now - x.CreationDate).TotalDays < 30)            
+            .ToListAsync();
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetAllProducts()
+    {
+        return DbContext
+            .Products
+            .Where(x => x.IsAvailable)            
+            .ToListAsync();
+    }
 }
 ```
 
@@ -277,31 +277,31 @@ public class Producer
 
 public class Product
 {
-	public bool IsAvailable { get; set; }
-	public DateTime CreationDate { get; set; }
-	public Producer Producer { get; set; }
+    public bool IsAvailable { get; set; }
+    public DateTime CreationDate { get; set; }
+    public Producer Producer { get; set; }
 }
 
 public class ProductController : Controller
 {
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetNewProducts()
-	{
-		return DbContext
-			.Products
-			.Where(x => x.IsAvailable && x.Producer.IsAvailable && // duplicated query
-				(DateTime.Now - x.CreationDate).TotalDays < 30)			
-			.ToListAsync();
-	}
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetAllProducts()
-	{
-		return DbContext
-			.Products
-			.Where(x => x.IsAvailable && x.Producer.IsAvailable) // duplicated query
-			.ToListAsync();
-	}
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetNewProducts()
+    {
+        return DbContext
+            .Products
+            .Where(x => x.IsAvailable && x.Producer.IsAvailable && // duplicated query
+                (DateTime.Now - x.CreationDate).TotalDays < 30)            
+            .ToListAsync();
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetAllProducts()
+    {
+        return DbContext
+            .Products
+            .Where(x => x.IsAvailable && x.Producer.IsAvailable) // duplicated query
+            .ToListAsync();
+    }
 }
 ```
 
@@ -311,26 +311,26 @@ AutoFilter contains implementation of Specification pattern allows to encapsulat
 
 public class ProductController : Controller
 {
-	private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
-	private Spec<Product> IsProductNew = new Spec<Product>(x => (DateTime.Now - x.CreationDate).TotalDays < 30);
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetNewProducts()
-	{
-		return DbContext
-			.Products
-			.Where(IsProductAvailable && IsProductNew) // combination of specifications using && (AND) operator
-			.ToListAsync();
-	}
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetAllProducts()
-	{
-		return DbContext
-			.Products
-			.Where(IsProductAvailable) 
-			.ToListAsync();
-	}
+    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
+    private Spec<Product> IsProductNew = new Spec<Product>(x => (DateTime.Now - x.CreationDate).TotalDays < 30);
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetNewProducts()
+    {
+        return DbContext
+            .Products
+            .Where(IsProductAvailable && IsProductNew) // combination of specifications using && (AND) operator
+            .ToListAsync();
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetAllProducts()
+    {
+        return DbContext
+            .Products
+            .Where(IsProductAvailable) 
+            .ToListAsync();
+    }
 }
 ```
 
@@ -342,17 +342,17 @@ Specification contains search options whist depends on application logic and use
 
 public class ProductController : Controller
 {
-	private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
-	{
-		return DbContext
-			.Products
-			.Where(IsProductAvailable) // specification
-			.AutoFilter(filter) // autofilter
-			.ToListAsync();
-	}
+    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {
+        return DbContext
+            .Products
+            .Where(IsProductAvailable) // specification
+            .AutoFilter(filter) // autofilter
+            .ToListAsync();
+    }
 }
 ```
 
@@ -364,16 +364,16 @@ Let's imagine that we hide products at our e-shop using only property IsAvailabl
 
 public class ProductController : Controller
 {
-	private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.Producer.IsAvailable);
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetProducts()
-	{
-		return DbContext
-			.Products
-			.Where(IsProductAvailable) // specification			
-			.ToListAsync();
-	}
+    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.Producer.IsAvailable);
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts()
+    {
+        return DbContext
+            .Products
+            .Where(IsProductAvailable) // specification            
+            .ToListAsync();
+    }
 }
 ```
 
@@ -382,16 +382,16 @@ But in this case specification depends only for producer but not product. And Au
 
 public class ProductController : Controller
 {
-	private Spec<Producer> IsProducerAvailable = new Spec<Producer>(x => x.IsAvailable);
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetProducts()
-	{
-		return DbContext
-			.Products
-			.Where(x => x.Producer, IsProducerAvailable) // specification for Producer but not product
-			.ToListAsync();
-	}
+    private Spec<Producer> IsProducerAvailable = new Spec<Producer>(x => x.IsAvailable);
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts()
+    {
+        return DbContext
+            .Products
+            .Where(x => x.Producer, IsProducerAvailable) // specification for Producer but not product
+            .ToListAsync();
+    }
 }
 ```
 
@@ -407,8 +407,8 @@ public class Category
 
 public class ProductCategory
 {
-	public Category Category { get; set; }
-	public Product Product { get; set; }
+    public Category Category { get; set; }
+    public Product Product { get; set; }
 }
 
 public class Product
@@ -418,15 +418,15 @@ public class Product
 
 public class ProductController : Controller
 {
-	private Spec<Category> IsCategoryAvailable = new Spec<Category>(x => x.IsAvailable);
-	
-	[HttpGet]
-	public async Task<IEnumerable<Product>> GetProducts()
-	{
-		return DbContext
-			.Products
-			.WhereAny(x => x.Categories, IsCategoryAvailable) // specification for Category and extension method WhenAny
-			.ToListAsync();
-	}
+    private Spec<Category> IsCategoryAvailable = new Spec<Category>(x => x.IsAvailable);
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts()
+    {
+        return DbContext
+            .Products
+            .WhereAny(x => x.Categories, IsCategoryAvailable) // specification for Category and extension method WhenAny
+            .ToListAsync();
+    }
 }
 ```
