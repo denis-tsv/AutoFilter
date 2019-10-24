@@ -87,7 +87,7 @@ AutoFilter allows not only create a LINQ Expression for ORM but it also allows t
 ```csharp
 public class ProductController : Controller
 {
-    private statis List<Product> _cachedProducts; // cached in memory list of products
+    private static List<Product> _cachedProducts; // cached in memory list of products
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
     {
