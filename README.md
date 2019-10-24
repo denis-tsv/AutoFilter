@@ -27,7 +27,7 @@ Every enterprise application has a lot of lookups and a lot of lookups contains 
 public class Product
 {
     public string Name { get; set; }
-    public int Cost { get; set; }    
+    public int Cost { get; set; }
 }
 ```
 
@@ -38,7 +38,7 @@ public class ProductFilter
 {
     public string Name { get; set; }
     public int? CostFrom { get; set; }
-    public int? CostTo { get; set; }    
+    public int? CostTo { get; set; }
 }
 ```
 
@@ -48,7 +48,7 @@ public class ProductFilter
 public class ProductController : Controller
 {
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+	public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
 	{
 		var products = DbContext.Products;
 		
@@ -72,7 +72,7 @@ AutoFilter allows to automatically generate LINQ expression by filter DTO like t
 public class ProductController : Controller
 {
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+	public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
 	{
 		return DbContext
 			.Products
@@ -121,11 +121,11 @@ AutoFilter allows to compare all value types (bool, DateTime, numeric types as i
 ```csharp
 public class ProductFilter
 {
-    [FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.GreaterOrEqual)]
+	[FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.GreaterOrEqual)]
 	public int? CostFrom { get; set; }
 	
 	[FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.LessOrEqual)]
-    public int? CostTo { get; set; }    
+	public int? CostTo { get; set; }
 }
 ```
 
@@ -151,12 +151,12 @@ If our product has a navigation property Producer, then we can include in filter
 ```csharp
 public class Producer
 {
-    public string Name { get; set; }    
+    public string Name { get; set; }
 }
 
 public class Product
 {
-    public Producer Producer { get; set; }    
+    public Producer Producer { get; set; }
 }
 
 public class ProductFilter
@@ -171,17 +171,17 @@ Debt of nested properties is not limited. If producer has a Country navigation p
 ```csharp
 public class Country
 {
-    public string Name { get; set; }    
+    public string Name { get; set; }
 }
 
 public class Producer
 {
-    public Country Country { get; set; }    
+    public Country Country { get; set; }
 }
 
 public class Product
 {
-    public Producer Producer { get; set; }    
+    public Producer Producer { get; set; }
 }
 
 public class ProductFilter
@@ -198,13 +198,13 @@ If value type in filter DTO does not correspond to value in entity property (for
 ```csharp
 public enum ProductState
 {
-    Available,
+	Available,
 	NotAvailable
 }
 
 public class Product
 {
-    public ProductState State { get; set; }    
+    public ProductState State { get; set; }
 }
 
 public class StringToEnumConverter : IFilverValueConverter
@@ -241,14 +241,14 @@ In many scenarios queries contains duplicated filter conditions. For example we 
 ```csharp
 public class Product
 {
-    public bool IsAvailable { get; set; }    	
-	public DateTime CreationDate { get; set; }   
+	public bool IsAvailable { get; set; }
+	public DateTime CreationDate { get; set; }
 }
 
 public class ProductController : Controller
 {
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetNewProducts()
+	public async Task<IEnumerable<Product>> GetNewProducts()
 	{
 		return DbContext
 			.Products
@@ -257,7 +257,7 @@ public class ProductController : Controller
 	}
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetAllProducts()
+	public async Task<IEnumerable<Product>> GetAllProducts()
 	{
 		return DbContext
 			.Products
@@ -272,20 +272,20 @@ But this condition also can change. For example we can add IsAvailable property 
 ```csharp
 public class Producer
 {
-    public bool IsAvailable { get; set; }    		
+    public bool IsAvailable { get; set; }
 }
 
 public class Product
 {
-    public bool IsAvailable { get; set; }    	
-	public DateTime CreationDate { get; set; }   
-	public Producer Producer { get; set; }    	
+	public bool IsAvailable { get; set; }
+	public DateTime CreationDate { get; set; }
+	public Producer Producer { get; set; }
 }
 
 public class ProductController : Controller
 {
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetNewProducts()
+	public async Task<IEnumerable<Product>> GetNewProducts()
 	{
 		return DbContext
 			.Products
@@ -295,7 +295,7 @@ public class ProductController : Controller
 	}
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetAllProducts()
+	public async Task<IEnumerable<Product>> GetAllProducts()
 	{
 		return DbContext
 			.Products
@@ -315,7 +315,7 @@ public class ProductController : Controller
 	private Spec<Product> IsProductNew = new Spec<Product>(x => (DateTime.Now - x.CreationDate).TotalDays < 30);
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetNewProducts()
+	public async Task<IEnumerable<Product>> GetNewProducts()
 	{
 		return DbContext
 			.Products
@@ -324,7 +324,7 @@ public class ProductController : Controller
 	}
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetAllProducts()
+	public async Task<IEnumerable<Product>> GetAllProducts()
 	{
 		return DbContext
 			.Products
@@ -345,7 +345,7 @@ public class ProductController : Controller
 	private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+	public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
 	{
 		return DbContext
 			.Products
@@ -367,7 +367,7 @@ public class ProductController : Controller
 	private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.Producer.IsAvailable);
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetProducts()
+	public async Task<IEnumerable<Product>> GetProducts()
 	{
 		return DbContext
 			.Products
@@ -385,7 +385,7 @@ public class ProductController : Controller
 	private Spec<Producer> IsProducerAvailable = new Spec<Producer>(x => x.IsAvailable);
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetProducts()
+	public async Task<IEnumerable<Product>> GetProducts()
 	{
 		return DbContext
 			.Products
@@ -402,18 +402,18 @@ AutoFilter also allows this kind of specifications for many to many relationship
 
 public class Category
 {
-    public bool IsAvailable { get; set; }    		
+    public bool IsAvailable { get; set; }
 }
 
 public class ProductCategory
 {
-    public Category Category { get; set; }
+	public Category Category { get; set; }
 	public Product Product { get; set; }
 }
 
 public class Product
 {
-    public ICollection Categories { get; set; }    		
+    public ICollection Categories { get; set; }
 }
 
 public class ProductController : Controller
@@ -421,7 +421,7 @@ public class ProductController : Controller
 	private Spec<Category> IsCategoryAvailable = new Spec<Category>(x => x.IsAvailable);
 	
 	[HttpGet]
-    public async Task<IEnumerable<Product>> GetProducts()
+	public async Task<IEnumerable<Product>> GetProducts()
 	{
 		return DbContext
 			.Products
