@@ -21,7 +21,7 @@ AutoFilter allows to create LINQ Expression by filter DTO. You can use this expr
 
 Every enterprise application has a lot of lookups and a lot of lookups contains filters. For example, in e-shop filter by product will look like this.
 
-- Model 
+Model 
 
 ```csharp
 public class Product
@@ -31,7 +31,7 @@ public class Product
 }
 ```
 
-- Filter DTO 
+Filter DTO 
 
 ```csharp
 public class ProductFilter
@@ -42,7 +42,7 @@ public class ProductFilter
 }
 ```
 
-- Controller which returns products by filter DTO query 
+Controller which returns products by filter DTO query 
 
 ```csharp
 public class ProductController : Controller
@@ -77,6 +77,22 @@ public class ProductController : Controller
         return DbContext
             .Products
             .AutoFilter(filter) // < - AutoFilter in action
+            .ToListAsync();
+    }
+}
+```
+
+AutoFilter allows not only create a LINQ Expression for ORM but it also allows to create an expression to filter objects in memory. Expression for in memory filtering using IEnumerable will contain null checks for string and navigation properties unlike expression for ORM filtering using IQuerable. For in-memory filtration expression will be compiled to delegate.
+
+```csharp
+public class ProductController : Controller
+{
+    private statis List<Product> _cachedProducts; // cached in memory list of products
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {
+        return _cachedProducts
+            .AutoFilter(filter) // < - AutoFilter for collection in memory. string and navigation properties will be checked on null
             .ToListAsync();
     }
 }
