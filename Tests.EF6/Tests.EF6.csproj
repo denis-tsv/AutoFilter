@@ -89,6 +89,12 @@
     <Compile Include="..\Tests.EFCore\MsSql\NavigationPropertyTests.cs">
       <Link>MsSql\NavigationPropertyTests.cs</Link>
     </Compile>
+    <Compile Include="..\Tests.EFCore\MsSql\NotAutoFilteredTests.cs">
+      <Link>MsSql\NotAutoFilteredTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests.EFCore\MsSql\OrderByTests.cs">
+      <Link>MsSql\OrderByTests.cs</Link>
+    </Compile>
     <Compile Include="..\Tests.EFCore\MsSql\SpecificationTests.cs">
       <Link>MsSql\SpecificationTests.cs</Link>
     </Compile>

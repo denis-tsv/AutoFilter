@@ -7,9 +7,11 @@
 </td>
 <td>
 
- # AutoFilter
+# AutoFilter
 
-AutoFilter allows to create LINQ Expression by filter DTO. You can use this expression to generate SQL using any ORM. Or you can use expression to filter collection of entities in memory.
+AutoFilter allows to create LINQ Expression by filter DTO. You can use this expression to generate SQL using any ORM (tested for Entity Framework Core and Entity Framework 6.3). Or you can use expression to filter collection of entities in memory.
+Also AutoFilter contains useful implementation of OrderBy and OrderByDescending methods which takes name of property for sorting. 
+And killer feature of AutoFilter is implementation of Specification pattern based on LINQ Expressions. It used in advanced scenarios as combination of specification, automapper and autofilter, combination of several queries wrapped in specifications, filtering by navigation properties in one-to-many and many-to-many scenarios. AutoFilter used in open-source project [ContestantRegister](https://github.com/denis-tsv/ContestantRegister).
 
 [![Nuget](https://img.shields.io/nuget/v/Universal.AutoFilter?logo=nuget)](https://www.nuget.org/packages/Universal.AutoFilter/)
 
@@ -238,6 +240,21 @@ public class ProductFilter
 }
 ```
 
+## NotAutoFiltered attribute
+If your DTO contains properties for filtering and some other properties which you need to exclude from autofiltering (for example property for sorting) then you can use attribute NotAutoFiltered for properties which you want to exclude.
+
+```csharp
+
+public class ProductFilter
+{    
+    [NotAutoFiltered] //property will be excluded from autofiltering because it has NotAutoFiltered attrubute
+    public string OrderBy { get; set; } //Name of property for sorting, for example Cost
+    
+    public int Cost { get; set; }
+}
+
+```
+
 ## Caching
 
 AutoFilter used reflection to get filter DTO metadata. This metadata cached to increase speed of filtering. All caches are enabled by default and can be disabled using IsEnabled static property.
@@ -246,6 +263,34 @@ FilterPropertyCache contains list of properties for filter DTO type with corresp
 
 ## Thread safety 
 Single instance of FilterProperty attribute used to generate LINQ expressions for all filter DTOs. Method GetExpression of FilterProperty attribute depends only from parameters and don't change any common state. So using a cache fo FilterProperty attributes is thread safe.
+
+# Order by property name
+Often we need to sort query results by some property name. AutoFilter contains useful implementations of OrderBy and OrderByDescending methods for IEnumerable and IQuerable interfaces. 
+
+```csharp
+public class ProductController : Controller
+{
+    private static IEnumerable<Products> ProductsCache; 
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetFavouriteProducts(string orderByPropertyName)
+    {   
+        return ProductsCache // sample for IEnumerable
+            .OrderByDescending(orderByPropertyName) // OrderBy(orderByPropertyName) also available
+            .ToListAsync();
+    }
+    
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {   
+        return DbContext
+            .Products // sample for IQueryable
+            .AutoFilter(filter)
+            .OrderBy("Cost") // OrderByDescending("Cost") also available
+            .ToListAsync();
+    }
+}
+```
 
 # Specification
 
@@ -367,6 +412,42 @@ public class ProductController : Controller
             .Products
             .Where(IsProductAvailable) // specification
             .AutoFilter(filter) // autofilter
+            .ToListAsync();
+    }
+}
+```
+
+## Specification and AutoFilter with AutoMapper
+Often controller's method needs to return DTO instead of domain entity (for example we need to hide from e-shop visitor properties IsAvailable and CreationDate of Product). In this case we need to apply specification for domain entity, after that apply mapping and apply autofilter for DTOs. Filtering it is client logic and DTO property names could differ from domain entity property names, that's why we apply autofilter after mapping.
+
+```csharp
+
+public class Product
+{
+    public int Id { get; set; }
+    public int Name { get; set; }
+    public bool IsAvailable { get; set; }
+    public DateTime CreationDate { get; set; }
+}
+
+public class ProductDto
+{
+    public int Id { get; set; }
+    public int Name { get; set; }
+}
+
+public class ProductController : Controller
+{
+    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
+    
+    [HttpGet]
+    public async Task<IEnumerable<ProductDto>> GetProducts([FromQuery]ProductFilter filter)
+    {
+        return DbContext
+            .Products
+            .Where(IsProductAvailable) // specification fitler for domain entities
+            .ProjectTo<ProductDto>(Mapper.ConfigurationProvider) // AutoMapper mapping from domain entities to DTOs
+            .AutoFilter(filter) // autofilter for DTOs
             .ToListAsync();
     }
 }

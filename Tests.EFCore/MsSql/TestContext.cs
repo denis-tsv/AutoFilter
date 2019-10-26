@@ -36,5 +36,6 @@ namespace Tests.EF
         public DbSet<StringTestItem> StringTestItems { get; set; }
         public DbSet<CompositeKindItem> CompositeKindItems { get; set; }
         public DbSet<InvalidCaseItem> InvalidCaseItems { get; set; }
+        public DbSet<NotAutoFilteredItem> NotAutoFilteredItems { get; set; }
     }
 }

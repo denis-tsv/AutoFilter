@@ -20,7 +20,7 @@ namespace Tests.EF
         private static bool initialized;
         protected void Init()
         {
-            Context = new TestContext();               
+            Context = new TestContext();
 
 #if EF6
             Context.Database.Log = (s) => 
@@ -44,6 +44,7 @@ namespace Tests.EF
 //                Context.NavigationPropertyItems.AddRange(NavigationPropertyTestsData.Items);
 //                Context.CompositeKindItems.AddRange(CompositeKindTestsData.Items);
 //                Context.InvalidCaseItems.AddRange(InvalidCasesTestsData.Items);
+//                Context.NotAutoFilteredItems.AddRange(NotAutoFilteredData.Items);
 //                Context.SaveChanges();
 
 //                initialized = true;

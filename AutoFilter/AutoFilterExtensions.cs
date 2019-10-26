@@ -20,7 +20,28 @@ namespace AutoFilter
         }
 
         public static IOrderedQueryable<TSubject> OrderBy<TSubject>(this IQueryable<TSubject> query, string propertyName)
-            => AutoFilter<TSubject>.Sort(query, propertyName);
+        {
+            var result = AutoFilter<TSubject>.OrderBy(query, propertyName);
+            return result;
+        }
+
+        public static IOrderedQueryable<TSubject> OrderByDescending<TSubject>(this IQueryable<TSubject> query, string propertyName)
+        {
+            var result = AutoFilter<TSubject>.OrderByDescending(query, propertyName);
+            return result;
+        }
+
+        public static IOrderedEnumerable<TSubject> OrderBy<TSubject>(this IEnumerable<TSubject> query, string propertyName)
+        {
+            var result = AutoFilter<TSubject>.OrderBy(query, propertyName);
+            return result;
+        }
+
+        public static IOrderedEnumerable<TSubject> OrderByDescending<TSubject>(this IEnumerable<TSubject> query, string propertyName)
+        {
+            var result = AutoFilter<TSubject>.OrderByDescending(query, propertyName);
+            return result;
+        }
     }
     
 }

@@ -22,6 +22,7 @@ namespace AutoFilter
         {
             var props = TypeInfoCache
                 .GetPublicProperties(type)
+                .Where(x => x.GetCustomAttribute<NotAutoFilteredAttribute>() == null)
                 .Select(x => new FilterProperty
                 {
                     PropertyInfo = x,
