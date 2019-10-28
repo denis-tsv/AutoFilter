@@ -57,10 +57,10 @@ public class ProductController : Controller
         if (!string.IsNullOrEmpty(filter.Name))
             products = products.Where(x => x.Name.Contains(filter.Name));
             
-        if (!filter.CostFrom.HasValue)
+        if (filter.CostFrom.HasValue)
             products = products.Where(x => x.Cost >= filter.CostFrom.Value);
         
-        if (!filter.CostTo.HasValue)
+        if (filter.CostTo.HasValue)
             products = products.Where(x => x.Cost <= filter.CostTo.Value);
         
         return products.ToListAsync();
@@ -78,7 +78,7 @@ public class ProductController : Controller
     {
         return DbContext
             .Products
-            .AutoFilter(filter) // < - AutoFilter in action
+            .AutoFilter(filter) // <- AutoFilter in action
             .ToListAsync();
     }
 }
@@ -94,7 +94,7 @@ public class ProductController : Controller
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
     {
         return _cachedProducts
-            .AutoFilter(filter) // < - AutoFilter for collection in memory. string and navigation properties will be checked on null
+            .AutoFilter(filter) // <- AutoFilter for collection in memory. string and navigation properties will be checked on null
             .ToListAsync();
     }
 }
