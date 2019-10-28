@@ -1,45 +1,46 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using AutoFilterClass = AutoFilter.AutoFilter;
 
 namespace AutoFilter
 {    
     public static class AutoFilterExtensions
     {
-        public static IQueryable<TSubject> AutoFilter<TSubject, TFilter>(
-            this IQueryable<TSubject> query, TFilter filter, ComposeKind composeKind = ComposeKind.And)
+        public static IQueryable<TItem> AutoFilter<TItem, TFilter>(
+            this IQueryable<TItem> query, TFilter filter, ComposeKind composeKind = ComposeKind.And)
         {
-            var filtered = AutoFilter<TSubject>.Filter(query, filter, composeKind);
+            var filtered = AutoFilterClass.Filter(query, filter, composeKind);
             return filtered;            
         }
 
-        public static IEnumerable<TSubject> AutoFilter<TSubject, TFilter>(
-            this IEnumerable<TSubject> query, TFilter filter, ComposeKind composeKind = ComposeKind.And)
+        public static IEnumerable<TItem> AutoFilter<TItem, TFilter>(
+            this IEnumerable<TItem> query, TFilter filter, ComposeKind composeKind = ComposeKind.And)
         {
-            var filtered = AutoFilter<TSubject>.Filter(query, filter, composeKind);
+            var filtered = AutoFilterClass.Filter(query, filter, composeKind);
             return filtered;
         }
 
-        public static IOrderedQueryable<TSubject> OrderBy<TSubject>(this IQueryable<TSubject> query, string propertyName)
+        public static IOrderedQueryable<TItem> OrderBy<TItem>(this IQueryable<TItem> query, string propertyName)
         {
-            var result = AutoFilter<TSubject>.OrderBy(query, propertyName);
+            var result = AutoFilterClass.OrderBy(query, propertyName);
             return result;
         }
 
-        public static IOrderedQueryable<TSubject> OrderByDescending<TSubject>(this IQueryable<TSubject> query, string propertyName)
+        public static IOrderedQueryable<TItem> OrderByDescending<TItem>(this IQueryable<TItem> query, string propertyName)
         {
-            var result = AutoFilter<TSubject>.OrderByDescending(query, propertyName);
+            var result = AutoFilterClass.OrderByDescending(query, propertyName);
             return result;
         }
 
-        public static IOrderedEnumerable<TSubject> OrderBy<TSubject>(this IEnumerable<TSubject> query, string propertyName)
+        public static IOrderedEnumerable<TItem> OrderBy<TItem>(this IEnumerable<TItem> query, string propertyName)
         {
-            var result = AutoFilter<TSubject>.OrderBy(query, propertyName);
+            var result = AutoFilterClass.OrderBy(query, propertyName);
             return result;
         }
 
-        public static IOrderedEnumerable<TSubject> OrderByDescending<TSubject>(this IEnumerable<TSubject> query, string propertyName)
+        public static IOrderedEnumerable<TItem> OrderByDescending<TItem>(this IEnumerable<TItem> query, string propertyName)
         {
-            var result = AutoFilter<TSubject>.OrderByDescending(query, propertyName);
+            var result = AutoFilterClass.OrderByDescending(query, propertyName);
             return result;
         }
     }

@@ -19,9 +19,8 @@ namespace AutoFilter
 
         public FilterCondition FilterCondition { get; set; }
 
-        public virtual Expression<Func<TItem, bool>> GetExpression<TItem>(bool inMemory, PropertyInfo filterPropertyInfo, object filter)
+        public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filter)
         {
-            var parameter = Expression.Parameter(typeof(TItem));
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
             var propertyValue = GetPropertyValue(filterPropertyInfo, filter);
 
@@ -51,9 +50,7 @@ namespace AutoFilter
                 }
             }
 
-            var res = Expression.Lambda<Func<TItem, bool>>(body, parameter);
-
-            return res;                      
+            return body;                      
         }
 
         protected virtual Expression GetNullCheckExpression(Expression propertyExpression)
