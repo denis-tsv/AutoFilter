@@ -13,7 +13,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/denis-tsv/AutoFilter/master/assets/logo/logo-128x128.png</PackageIconUrl>
     <Product>Universal.AutoFilter</Product>
     <PackageId>Universal.AutoFilter</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

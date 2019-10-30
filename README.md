@@ -255,6 +255,14 @@ public class ProductFilter
 
 ```
 
+## Default values
+FilterPropertyAttribute class contains three static properties which allows to manage default behavior of AutoFilter.
+- DefaultStringFilterCondition allows to set default value for StringFilterCondition property, by default DefaultStringFilterCondition contains StartsWith value.
+- DefaultIgnoreCase allows to set default value for IgnoreCase property, by default DefaultIgnoreCase contains false value.
+- DefaultFilterCondition allows to set default value for FilterCondition property, by default DefaultFilterCondition contains Equal value.
+
+You can set values to default properties during application configuration, for exampe in Startup class for ASP.NET Core.
+
 ## Caching
 
 AutoFilter used reflection to get filter DTO metadata. This metadata cached to increase speed of filtering. All caches are enabled by default and can be disabled using IsEnabled static property.

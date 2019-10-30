@@ -9,15 +9,30 @@ namespace AutoFilter
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class FilterPropertyAttribute : Attribute
     {
+        /// <summary>
+        /// Default falue for StringFilterCondition property. StringFilterCondition.StartsWith by default.
+        /// </summary>
+        public static StringFilterCondition DefaultStringFilterCondition = StringFilterCondition.StartsWith;
+        
+        /// <summary>
+        /// Default falue for IgnoreCase property. False by default.
+        /// </summary>
+        public static bool DefaultIgnoreCase = false;
+
+        /// <summary>
+        /// Default falue for FilterCondition property. FilterCondition.Equal by default.
+        /// </summary>
+        public static FilterCondition DefaultFilterCondition = FilterCondition.Equal;
+
         protected static Expression NullConstant = Expression.Constant(null);
 
         public string TargetPropertyName { get; set; }
 
-        public StringFilterCondition StringFilter { get; set; } 
+        public StringFilterCondition StringFilter { get; set; } = DefaultStringFilterCondition;
 
-        public bool IgnoreCase { get; set; }
+        public bool IgnoreCase { get; set; } = DefaultIgnoreCase;
 
-        public FilterCondition FilterCondition { get; set; }
+        public FilterCondition FilterCondition { get; set; } = DefaultFilterCondition;
 
         public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filter)
         {

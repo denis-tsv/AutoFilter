@@ -6,6 +6,9 @@ namespace AutoFilter.Extensions
 {
     public class CompiledExpressionsCache<TIn, TOut>
     {
+        /// <summary>
+        /// Is cache enabled. False by default
+        /// </summary>
         public static bool IsEnabled { get; set; } = false;
 
         private static readonly ConcurrentDictionary<Expression<Func<TIn, TOut>>, Func<TIn, TOut>> Cache

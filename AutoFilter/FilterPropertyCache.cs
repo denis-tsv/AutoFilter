@@ -9,6 +9,9 @@ namespace AutoFilter
     {
         private static readonly ConcurrentDictionary<Type, FilterProperty[]> Cache = new ConcurrentDictionary<Type, FilterProperty[]>();
 
+        /// <summary>
+        /// Is cache enabled. True by default
+        /// </summary>
         public static bool IsEnabled { get; set; } = true;
 
         public static FilterProperty[] GetFilterProperties(Type type)
