@@ -311,17 +311,17 @@ In many scenarios queries contains duplicated filter conditions. For example we 
 public class Product
 {
     public bool IsAvailable { get; set; }
-    public DateTime CreationDate { get; set; }
+    public string Name { get; set; }
 }
 
 public class ProductController : Controller
 {
     [HttpGet]
-    public async Task<IEnumerable<Product>> GetNewProducts()
+    public async Task<IEnumerable<Product>> GetProductsByName(string name)
     {
         return DbContext
             .Products
-            .Where(x => x.IsAvailable && (DateTime.Now - x.CreationDate).TotalDays < 30)            
+            .Where(x => x.IsAvailable && x.Name.Contains(name))            
             .ToListAsync();
     }
     
@@ -347,19 +347,19 @@ public class Producer
 public class Product
 {
     public bool IsAvailable { get; set; }
-    public DateTime CreationDate { get; set; }
+    public string Name { get; set; }
     public Producer Producer { get; set; }
 }
 
 public class ProductController : Controller
 {
     [HttpGet]
-    public async Task<IEnumerable<Product>> GetNewProducts()
+    public async Task<IEnumerable<Product>> GetProductsByName(string name)
     {
         return DbContext
             .Products
             .Where(x => x.IsAvailable && x.Producer.IsAvailable && // duplicated query
-                (DateTime.Now - x.CreationDate).TotalDays < 30)            
+                x.Name.Contains(name))            
             .ToListAsync();
     }
     
@@ -380,15 +380,18 @@ AutoFilter contains implementation of Specification pattern allows to encapsulat
 
 public class ProductController : Controller
 {
-    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
-    private Spec<Product> IsProductNew = new Spec<Product>(x => (DateTime.Now - x.CreationDate).TotalDays < 30);
+    private static Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
+    private static Spec<Product> ProductByName(string name)
+    {
+        return new Spec<Product>(x => x.Name.Contains(name));
+    }
     
     [HttpGet]
-    public async Task<IEnumerable<Product>> GetNewProducts()
+    public async Task<IEnumerable<Product>> GetProductsByName(string name)
     {
         return DbContext
             .Products
-            .Where(IsProductAvailable && IsProductNew) // combination of specifications using && (AND) operator
+            .Where(IsProductAvailable && ProductByName(name)) // combination of specifications using && (AND) operator
             .ToListAsync();
     }
     
