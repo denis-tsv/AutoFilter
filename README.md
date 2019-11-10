@@ -414,7 +414,7 @@ Specification contains search options whist depends on application logic and use
 
 public class ProductController : Controller
 {
-    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
+    private static Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
     
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
@@ -449,7 +449,7 @@ public class ProductDto
 
 public class ProductController : Controller
 {
-    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
+    private static Spec<Product> IsProductAvailable = new Spec<Product>(x => x.IsAvailable && x.Producer.IsAvailable);
     
     [HttpGet]
     public async Task<IEnumerable<ProductDto>> GetProducts([FromQuery]ProductFilter filter)
@@ -472,7 +472,7 @@ Let's imagine that we hide products at our e-shop using only property IsAvailabl
 
 public class ProductController : Controller
 {
-    private Spec<Product> IsProductAvailable = new Spec<Product>(x => x.Producer.IsAvailable);
+    private static Spec<Product> IsProductAvailable = new Spec<Product>(x => x.Producer.IsAvailable);
     
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts()
@@ -490,7 +490,7 @@ But in this case specification depends only for producer but not product. And Au
 
 public class ProductController : Controller
 {
-    private Spec<Producer> IsProducerAvailable = new Spec<Producer>(x => x.IsAvailable);
+    private static Spec<Producer> IsProducerAvailable = new Spec<Producer>(x => x.IsAvailable);
     
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts()
@@ -526,7 +526,7 @@ public class Product
 
 public class ProductController : Controller
 {
-    private Spec<Category> IsCategoryAvailable = new Spec<Category>(x => x.IsAvailable);
+    private static Spec<Category> IsCategoryAvailable = new Spec<Category>(x => x.IsAvailable);
     
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts()
