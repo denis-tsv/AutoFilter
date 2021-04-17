@@ -11,11 +11,18 @@
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright Denis Tsvettsikh</Copyright>
     <Description>AutoFilter allows to generate LinqExpression by DTO and pass this expression to ORM for SQL generation and database filtration or compile expression to delegate for in-memory filtration</Description>
-    <PackageIconUrl>https://raw.githubusercontent.com/denis-tsv/AutoFilter/master/assets/logo/logo-128x128.png</PackageIconUrl>
     <Product>Universal.AutoFilter</Product>
     <PackageId>Universal.AutoFilter</PackageId>
     <Version>1.0.4</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageIcon>logo-128x128.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\assets\logo\logo-128x128.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
