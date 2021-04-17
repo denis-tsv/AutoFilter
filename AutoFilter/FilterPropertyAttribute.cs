@@ -6,21 +6,21 @@ using System.Reflection;
 
 namespace AutoFilter
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property)]
     public class FilterPropertyAttribute : Attribute
     {
         /// <summary>
-        /// Default falue for StringFilterCondition property. StringFilterCondition.StartsWith by default.
+        /// Default value for StringFilterCondition property. StringFilterCondition.StartsWith by default.
         /// </summary>
         public static StringFilterCondition DefaultStringFilterCondition = StringFilterCondition.StartsWith;
         
         /// <summary>
-        /// Default falue for IgnoreCase property. False by default.
+        /// Default value for IgnoreCase property. False by default.
         /// </summary>
         public static bool DefaultIgnoreCase = false;
 
         /// <summary>
-        /// Default falue for FilterCondition property. FilterCondition.Equal by default.
+        /// Default value for FilterCondition property. FilterCondition.Equal by default.
         /// </summary>
         public static FilterCondition DefaultFilterCondition = FilterCondition.Equal;
 
@@ -34,10 +34,10 @@ namespace AutoFilter
 
         public FilterCondition FilterCondition { get; set; } = DefaultFilterCondition;
 
-        public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filter)
+        public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
         {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
-            var propertyValue = GetPropertyValue(filterPropertyInfo, filter);
+            var propertyValue = GetPropertyValue(filterPropertyValue, filter);
 
             Expression value = Expression.Constant(propertyValue);
 
@@ -61,7 +61,7 @@ namespace AutoFilter
                 if (nullChecks.Any())
                 {
                     nullChecks.Add(body);
-                    body = nullChecks.Aggregate((x, y) => Expression.AndAlso(x, y));
+                    body = nullChecks.Aggregate(Expression.AndAlso);
                 }
             }
 
@@ -78,9 +78,9 @@ namespace AutoFilter
             return null;
         }
 
-        protected virtual object GetPropertyValue(PropertyInfo filterPropertyInfo, object filter)
+        protected virtual object GetPropertyValue(object filterPropertyValue, object filter)
         {
-            return filterPropertyInfo.GetValue(filter);
+            return filterPropertyValue;
         }
                 
         protected virtual string GetPropertyName(PropertyInfo filterPropertyInfo)
@@ -105,73 +105,57 @@ namespace AutoFilter
             if (propertyType == typeof(string))
                 return GetStringBuilderFunc();
 
-            switch (FilterCondition)
+            return FilterCondition switch
             {
-                case FilterCondition.Equal: return Expression.Equal;
-                case FilterCondition.Greater: return Expression.GreaterThan;
-                case FilterCondition.GreaterOrEqual: return Expression.GreaterThanOrEqual;
-                case FilterCondition.Less: return Expression.LessThan;
-                case FilterCondition.LessOrEqual: return Expression.LessThanOrEqual;
-            }
-
-            return Expression.Equal;        
+                FilterCondition.Equal => Expression.Equal,
+                FilterCondition.Greater => Expression.GreaterThan,
+                FilterCondition.GreaterOrEqual => Expression.GreaterThanOrEqual,
+                FilterCondition.Less => Expression.LessThan,
+                FilterCondition.LessOrEqual => Expression.LessThanOrEqual,
+                _ => Expression.Equal
+            };
         }
         
-        private static readonly string StringStartWithIgnoreCase = "StringStartWithIgnoreCase";
-        private static readonly string StringStartWith = "StringStartWith";
-        private static readonly string StringContainsIgnoreCase = "StringContainsIgnoreCase";
-        private static readonly string StringContains = "StringContains";
-
-        private static readonly IReadOnlyDictionary<string, Func<MemberExpression, Expression, Expression>> _stringFilters;            
+        private static readonly Func<MemberExpression, Expression, Expression> StringStartWithFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringContainsFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringStartWithIgnoreCaseFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringContainsIgnoreCaseFunc;
 
         static FilterPropertyAttribute()
         {
-            var filters = new Dictionary<string, Func<MemberExpression, Expression, Expression>>();
 
-            var startsWith = typeof(string).GetMethod("StartsWith", new[] { typeof(string) });
-            var contains = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+            var startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) });
+            var contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
+            var toLower = typeof(string).GetMethod(nameof(string.ToLower), new Type[] { });
 
-            filters.Add(StringStartWith, (p, v) => Expression.Call(p, startsWith, v));
-            filters.Add(StringContains, (p, v) => Expression.Call(p, contains, v));
+            StringStartWithFunc = (p, v) => Expression.Call(p, startsWith, v);
+            StringContainsFunc = (p, v) => Expression.Call(p, contains, v);
 
-            Func<MemberExpression, Expression, Expression> startIgnoreCase = (p, v) =>
+            StringStartWithIgnoreCaseFunc = (p, v) =>
             {
-                var mi = typeof(string).GetMethod("ToLower", new Type[] { });
-                var pl = Expression.Call(p, mi);
-                var vl = Expression.Call(v, mi);
+                var pl = Expression.Call(p, toLower);
+                var vl = Expression.Call(v, toLower);
                 return Expression.Call(pl, startsWith, vl);
             };
-            filters.Add(StringStartWithIgnoreCase, startIgnoreCase);
 
-            Func<MemberExpression, Expression, Expression> containsIgnoreCase = (p, v) =>
+            StringContainsIgnoreCaseFunc = (p, v) =>
             {
-                var mi = typeof(string).GetMethod("ToLower", new Type[] { });
-                var pl = Expression.Call(p, mi);
-                var vl = Expression.Call(v, mi);
+                var pl = Expression.Call(p, toLower);
+                var vl = Expression.Call(v, toLower);
                 return Expression.Call(pl, contains, vl);
             };
-            filters.Add(StringContainsIgnoreCase, containsIgnoreCase);
-            _stringFilters = filters;
         }
 
         protected virtual Func<MemberExpression, Expression, Expression> GetStringBuilderFunc()
         {
-            //TODO use C# 8 tuple patterns
-            switch (StringFilter)
+            return (StringFilter, IgnoreCase) switch
             {
-                case StringFilterCondition.StartsWith:
-                    if (IgnoreCase)
-                        return _stringFilters[StringStartWithIgnoreCase];
-                    else
-                        return _stringFilters[StringStartWith];                    
-                case StringFilterCondition.Contains:
-                    if (IgnoreCase)
-                        return _stringFilters[StringContainsIgnoreCase];
-                    else
-                        return _stringFilters[StringContains];                    
-            }
-
-            throw new InvalidOperationException();
+                (StringFilterCondition.StartsWith, true)  => StringStartWithIgnoreCaseFunc,
+                (StringFilterCondition.StartsWith, false) => StringStartWithFunc,
+                (StringFilterCondition.Contains, true)    => StringContainsIgnoreCaseFunc,
+                (StringFilterCondition.Contains, false)   => StringContainsFunc,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
     }
 }

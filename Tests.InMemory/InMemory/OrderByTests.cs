@@ -2,6 +2,7 @@
 using Xunit;
 using AutoFilter;
 using System.Linq;
+using Tests.Models;
 
 namespace Tests.InMemory
 {
@@ -11,7 +12,7 @@ namespace Tests.InMemory
         public void OrderBy()
         {
             //arrange
-            var propertyName = "NoAttribute";
+            var propertyName = nameof(StringTestItem.NoAttribute);
 
             //act
             var orderedAuto = StringTestsData.Items
@@ -30,7 +31,7 @@ namespace Tests.InMemory
         public void OrderByDescending()
         {
             //arrange
-            var propertyName = "IntGreaterOrEqual";
+            var propertyName = nameof(FilterConditionItem.IntGreaterOrEqual);
 
             //act
             var orderedAuto = FilterConditionTestsData.Items

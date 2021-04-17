@@ -1,5 +1,4 @@
-﻿
-using Tests.EF;
+﻿using Tests.EF;
 
 namespace ConsoleApp1
 {

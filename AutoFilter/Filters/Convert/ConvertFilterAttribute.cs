@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 
 namespace AutoFilter.Filters.Convert
 {
@@ -15,10 +14,10 @@ namespace AutoFilter.Filters.Convert
 
         public Type ConverterType { get; }
 
-        protected override object GetPropertyValue(PropertyInfo filterPropertyInfo, object filter)
+        protected override object GetPropertyValue(object filterPropertyValue, object filter)
         {
             var converter = FilterValueConvertersCache.GetConverter(ConverterType);
-            return converter.Convert(filterPropertyInfo.GetValue(filter));
+            return converter.Convert(filterPropertyValue);
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace AutoFilter.Extensions
 {
-    public static class QuerableExtensions
+    public static class QueryableExtensions
     {
         public static IQueryable<TItem> Where<TItem, TNavigationProperty>(this IQueryable<TItem> queryable,
             Expression<Func<TItem, TNavigationProperty>> first, Expression<Func<TNavigationProperty, bool>> second)

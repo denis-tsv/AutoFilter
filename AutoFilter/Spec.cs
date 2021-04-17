@@ -33,6 +33,6 @@ namespace AutoFilter
         }
 
         // don't used because compilation of expression takes a long time
-        public bool IsSatisfiedBy(T obj) => _expression.AsFunc()(obj);
+        public bool IsSatisfiedBy(T obj) => _expression.Compile()(obj);
     }
 }

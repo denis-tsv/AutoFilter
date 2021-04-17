@@ -7,7 +7,7 @@ namespace Tests.Models
         public int Id { get; set; }
 
 
-        public NestedItem NestedItem { get; set; }
+        public virtual NestedItem NestedItem { get; set; }
     }
 
     public class NestedItem
@@ -17,6 +17,6 @@ namespace Tests.Models
         public int Int { get; set; }
         public int? NullableInt { get; set; }
 
-        public ICollection<NavigationPropertyItem> NavigationPropertyItems { get; set; }
+        public virtual ICollection<NavigationPropertyItem> NavigationPropertyItems { get; set; }
     }
 }

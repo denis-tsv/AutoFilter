@@ -21,8 +21,8 @@ namespace Tests.EF
                 .ToList();
 
             //assert
-            Assert.Equal(2, filtered.Count); //для SQL Serevr like регистронезависимый 
-            Assert.Equal("noattribute", filtered[0].NoAttribute); //странно, генерится SQL для регистрозависимого сравнения. Но он не работает ) 
+            Assert.Equal(2, filtered.Count); 
+            Assert.Equal("noattribute", filtered[0].NoAttribute); 
             Assert.Equal("NoAttributeOk", filtered[1].NoAttribute);
 
             /* EF Core
@@ -83,14 +83,8 @@ namespace Tests.EF
 
             //assert
             Assert.Equal(2, filtered.Count);
-#if EF_CORE
-            Assert.Equal("testcontainsignorecase", filtered[0].ContainsIgnoreCase);
-            Assert.Equal("TestContainsIgnoreCase", filtered[1].ContainsIgnoreCase);
-#elif EF6
             Assert.Equal("TestContainsIgnoreCase", filtered[0].ContainsIgnoreCase);
-            Assert.Equal("testcontainsignorecase", filtered[1].ContainsIgnoreCase);            
-#endif
-
+            Assert.Equal("testcontainsignorecase", filtered[1].ContainsIgnoreCase);
 
             /* EF 6
                WHERE ( CAST(CHARINDEX(LOWER(N'ContainsIgnoreCase'), LOWER([Extent1].[ContainsIgnoreCase])) AS int)) > 0
@@ -112,13 +106,9 @@ namespace Tests.EF
 
             //assert
             Assert.Equal(2, filtered.Count);
-#if EF_CORE
+
             Assert.Equal("startswithcase", filtered[0].StartsWithCase);
             Assert.Equal("StartsWithCase", filtered[1].StartsWithCase);
-#elif EF6
-            Assert.Equal("StartsWithCase", filtered[0].StartsWithCase);
-            Assert.Equal("startswithcase", filtered[1].StartsWithCase);            
-#endif
         }
 
         [Fact]
@@ -136,13 +126,9 @@ namespace Tests.EF
 
             //assert
             Assert.Equal(2, filtered.Count);
-#if EF_CORE
-            Assert.Equal("startswithignorecasetest", filtered[0].StartsWithIgnoreCase);
-            Assert.Equal("StartsWithIgnoreCaseTest", filtered[1].StartsWithIgnoreCase);
-#elif EF6
+
             Assert.Equal("StartsWithIgnoreCaseTest", filtered[0].StartsWithIgnoreCase);
-            Assert.Equal("startswithignorecasetest", filtered[1].StartsWithIgnoreCase);            
-#endif
+            Assert.Equal("startswithignorecasetest", filtered[1].StartsWithIgnoreCase);
 
             /* EF 6
             WHERE ( CAST(CHARINDEX(LOWER(N'StartsWithIgnoreCase'), LOWER([Extent1].[StartsWithIgnoreCase])) AS int)) = 1

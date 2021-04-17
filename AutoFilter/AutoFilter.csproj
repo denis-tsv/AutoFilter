@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+	<LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Denis Tsvettsikh</Authors>
     <RepositoryUrl>https://github.com/denis-tsv/AutoFilter</RepositoryUrl>
@@ -13,7 +14,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/denis-tsv/AutoFilter/master/assets/logo/logo-128x128.png</PackageIconUrl>
     <Product>Universal.AutoFilter</Product>
     <PackageId>Universal.AutoFilter</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
 

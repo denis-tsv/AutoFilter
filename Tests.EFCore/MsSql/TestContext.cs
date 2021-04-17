@@ -14,9 +14,9 @@ namespace Tests.EF
     public class TestContext : DbContext
     {
 #if EF_CORE
-        public static readonly ILoggerFactory loggerFactory = new LoggerFactory(new[] {
-              new ConsoleLoggerProvider((_, __) => true, true)
-        });
+        //public static readonly ILoggerFactory loggerFactory = new LoggerFactory(new[] {
+        //      new ConsoleLoggerProvider((_, __) => true, true)
+        //});
 
         //public TestContext(DbContextOptions options) : base(options)
         //{
@@ -24,10 +24,10 @@ namespace Tests.EF
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
-            .UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
+            //.UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
             .EnableSensitiveDataLogging()
             .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=AutoFilter;Trusted_Connection=True;MultipleActiveResultSets=true");
-            //.UseSqlServer(@"Data Source=.\sqlexpress;Initial Catalog=AutoFilter;Integrated Security=True");
+            //.UseSqlServer(@"Data Source=127.0.0.1,1433;Initial Catalog=AutoFilter;User Id=sa;Password=<YourStrong!Passw0rd>;");
 #endif
         public DbSet<ConvertItem> ConvertItems { get; set; }
         public DbSet<FilterConditionItem> FilterConditionItems { get; set; }
