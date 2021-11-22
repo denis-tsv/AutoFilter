@@ -6,8 +6,8 @@ namespace AutoFilter.Filters.Convert
     {
         public ConvertFilterAttribute(Type destinationType)
         {
-            if (destinationType.GetInterface(nameof(IFilverValueConverter)) == null)
-                throw new ArgumentException($"Not implemented {nameof(IFilverValueConverter)}");
+            if (destinationType.GetInterface(nameof(IFilterValueConverter)) == null)
+                throw new ArgumentException($"Not implemented {nameof(IFilterValueConverter)}");
 
             ConverterType = destinationType;
         }

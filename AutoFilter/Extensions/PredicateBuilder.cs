@@ -98,15 +98,15 @@ namespace AutoFilter.Extensions
 
         private class ReplaceVisitor : ExpressionVisitor
         {
-            private readonly Expression from, to;
+            private readonly Expression _from, _to;
             public ReplaceVisitor(Expression from, Expression to)
             {
-                this.from = from;
-                this.to = to;
+                _from = from;
+                _to = to;
             }
             public override Expression Visit(Expression node)
             {
-                return node == from ? to : base.Visit(node);
+                return node == _from ? _to : base.Visit(node);
             }
         }
 
@@ -118,14 +118,7 @@ namespace AutoFilter.Extensions
             {
                 _map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
             }
-
-            public static Expression ReplaceParameters(Expression exp, ParameterExpression f, ParameterExpression s)
-            {
-                var map = new Dictionary<ParameterExpression, ParameterExpression>()
-                { { f, s} };
-                return new ParameterRebinder(map).Visit(exp);
-            }
-
+            
             public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
             {
                 return new ParameterRebinder(map).Visit(exp);
@@ -133,9 +126,7 @@ namespace AutoFilter.Extensions
 
             protected override Expression VisitParameter(ParameterExpression p)
             {
-                ParameterExpression replacement;
-
-                if (_map.TryGetValue(p, out replacement))
+                if (_map.TryGetValue(p, out var replacement))
                 {
                     p = replacement;
                 }

@@ -1,6 +1,6 @@
 ﻿namespace AutoFilter.Filters.Convert
 {
-    public class NullableIntToNullableBooleanConverter : IFilverValueConverter
+    public class NullableIntToNullableBooleanConverter : IFilterValueConverter
     {
         public object Convert(object v)
         {

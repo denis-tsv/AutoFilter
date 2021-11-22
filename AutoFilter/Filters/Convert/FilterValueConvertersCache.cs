@@ -7,14 +7,13 @@ namespace AutoFilter.Filters.Convert
     {
         public static bool IsEnabled { get; set; } = true;
 
-        private static readonly ConcurrentDictionary<Type, IFilverValueConverter> Cache =
-            new ConcurrentDictionary<Type, IFilverValueConverter>();
+        private static readonly ConcurrentDictionary<Type, IFilterValueConverter> Cache = new();
 
-        public static IFilverValueConverter GetConverter(Type type)
+        public static IFilterValueConverter GetConverter(Type type)
         {
-            if (!IsEnabled) return (IFilverValueConverter)Activator.CreateInstance(type);
+            if (!IsEnabled) return (IFilterValueConverter)Activator.CreateInstance(type);
 
-            return Cache.GetOrAdd(type, (IFilverValueConverter)Activator.CreateInstance(type));
+            return Cache.GetOrAdd(type, (IFilterValueConverter)Activator.CreateInstance(type));
         }
     }
 }

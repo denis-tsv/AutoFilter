@@ -1,6 +1,6 @@
 ﻿namespace AutoFilter.Filters.Convert
 {
-    public interface IFilverValueConverter
+    public interface IFilterValueConverter
     {
         object Convert(object value);
     }

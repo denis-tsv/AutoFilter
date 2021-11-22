@@ -17,22 +17,22 @@ namespace AutoFilter.Filters
 
         protected override Expression GetNestedNullCheckExpression(ParameterExpression parameter)
         {  
-            var nullchecks = new List<Expression>();
+            var nullChecks = new List<Expression>();
             var propNames = Path.Split('.');
             var property = Expression.Property(parameter, propNames[0]);
 
             var nullCheck = Expression.NotEqual(property, NullConstant);
-            nullchecks.Add(nullCheck);
+            nullChecks.Add(nullCheck);
 
             for (int i = 1; i < propNames.Length; i++)
             {
                 property = Expression.Property(property, propNames[i]);
                 nullCheck = Expression.NotEqual(property, NullConstant);
-                nullchecks.Add(nullCheck);                    
+                nullChecks.Add(nullCheck);                    
             }
 
-            var _aggregatedNullChecks = nullchecks.Aggregate((cur, next) => Expression.AndAlso(cur, next));
-            return _aggregatedNullChecks;
+            var aggregatedNullChecks = nullChecks.Aggregate((cur, next) => Expression.AndAlso(cur, next));
+            return aggregatedNullChecks;
         }
 
         protected override MemberExpression GetPropertyExpression(ParameterExpression parameter, PropertyInfo filterPropertyInfo)

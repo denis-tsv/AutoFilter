@@ -3,7 +3,7 @@ using System;
 
 namespace Tests.Models
 {
-    public class StringToEnumConverter : IFilverValueConverter
+    public class StringToEnumConverter : IFilterValueConverter
     {
         public object Convert(object value)
         {
