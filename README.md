@@ -211,7 +211,7 @@ public class ProductFilter
 
 ## Converter
 
-If value type in filter DTO does not correspond to value in entity property (for example, filter property contains enum's name but entity property contains enum's value) then you have to use converter. You need to implement IFilverValueConverter interface and use ConvertFilter attribute to specify this implementation for property of filter DTO.
+If value type in filter DTO does not correspond to value in entity property (for example, filter property contains enum's name but entity property contains enum's value) then you have to use converter. You need to implement IFilterValueConverter interface and use ConvertFilter attribute to specify this implementation for property of filter DTO.
 
 ```csharp
 public enum ProductState
@@ -225,7 +225,7 @@ public class Product
     public ProductState State { get; set; }
 }
 
-public class StringToEnumConverter : IFilverValueConverter
+public class StringToEnumConverter : IFilterValueConverter
 {
     public object Convert(object value)
     {
