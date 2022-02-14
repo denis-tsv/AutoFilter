@@ -13,7 +13,7 @@ AutoFilter allows to create LINQ Expression by filter DTO. You can use this expr
 Also AutoFilter contains useful implementation of OrderBy and OrderByDescending methods which takes name of property for sorting. 
 And killer feature of AutoFilter is implementation of Specification pattern based on LINQ Expressions. It used in advanced scenarios as combination of specification, automapper and autofilter, combination of several queries wrapped in specifications, filtering by navigation properties in one-to-many and many-to-many scenarios. AutoFilter used in open-source project [ContestantRegister](https://github.com/denis-tsv/ContestantRegister).
 
-[![Nuget](https://img.shields.io/nuget/v/Universal.AutoFilter?logo=nuget)](https://www.nuget.org/packages/Universal.AutoFilter/)
+[![Nuget](https://img.shields.io/nuget/v/AutoFilter.Sql?logo=nuget)](https://www.nuget.org/packages/AutoFilter.Sql/)
 
 </td>
 </tr>
