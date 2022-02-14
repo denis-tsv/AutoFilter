@@ -1,4 +1,5 @@
 ﻿using Tests.Models;
+using Tests.Models.Models;
 #if EF_CORE
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -37,5 +38,7 @@ namespace Tests.EF
         public DbSet<CompositeKindItem> CompositeKindItems { get; set; }
         public DbSet<InvalidCaseItem> InvalidCaseItems { get; set; }
         public DbSet<NotAutoFilteredItem> NotAutoFilteredItems { get; set; }
+        public DbSet<RangeFilterItem> RangeFilterItems { get; set; }
+        public DbSet<RangeFilterNestedItem> RangeFilterNestedItems { get; set; }
     }
 }
