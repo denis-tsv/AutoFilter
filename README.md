@@ -141,13 +141,13 @@ public class ProductController : Controller
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
     {
         IQueryable<Product> = DbContext.Products;
-		
-		if (!string.IsNullOrEmpty(filter.Text))
-			query = query.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.StartsWith(filter.Text));
-			
+
+        if (!string.IsNullOrEmpty(filter.Text))
+            query = query.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.StartsWith(filter.Text));
+
         query = query.AutoFilter(filter);
-        
-		return query.ToListAsync();
+
+        return query.ToListAsync();
     }
 }
 ```
