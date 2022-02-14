@@ -13,7 +13,7 @@ AutoFilter allows to create LINQ Expression by filter DTO. You can use this expr
 Also AutoFilter contains useful implementation of OrderBy and OrderByDescending methods which takes name of property for sorting. 
 And killer feature of AutoFilter is implementation of Specification pattern based on LINQ Expressions. It used in advanced scenarios as combination of specification, automapper and autofilter, combination of several queries wrapped in specifications, filtering by navigation properties in one-to-many and many-to-many scenarios. AutoFilter used in open-source project [ContestantRegister](https://github.com/denis-tsv/ContestantRegister).
 
-[![Nuget](https://img.shields.io/nuget/v/Universal.AutoFilter?logo=nuget)](https://www.nuget.org/packages/Universal.AutoFilter/)
+[![Nuget](https://img.shields.io/nuget/v/AutoFilter.Sql?logo=nuget)](https://www.nuget.org/packages/AutoFilter.Sql/)
 
 </td>
 </tr>
@@ -132,6 +132,26 @@ public class ProductFilter
 }
 ```
 
+## Search by text (google like)
+AutoFilter does't support google-like search by text. It is better to combine search by text and AutoFilter.
+```csharp
+public class ProductController : Controller
+{
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {
+        IQueryable<Product> = DbContext.Products;
+
+        if (!string.IsNullOrEmpty(filter.Text))
+            query = query.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.StartsWith(filter.Text));
+
+        query = query.AutoFilter(filter);  //Ignore Text property
+
+        return query.ToListAsync();
+    }
+}
+```
+
 ## Value object comparison
 
 AutoFilter allows to compare all value types (bool, DateTime, numeric types as int, double, decimal) using options Equal, Less, LessOrEqual, Greater, GreaterOrEqual. Equal is default. You can use FilterCondition property of FilterProperty attribute to set option for value type comparison.
@@ -144,6 +164,15 @@ public class ProductFilter
     
     [FilterProperty(TargetPropertyName = "Cost", FilterCondition = FilterCondition.LessOrEqual)]
     public int? CostTo { get; set; }
+}
+```
+
+## Range
+AutoFilter allows to specify Range for value types. One of properties From and To for Range object must be specified. AutoFilter fill generate query Cost >= @from AND Cost <= @to
+```csharp
+public class ProductFilter
+{
+    public Range<int> Cost { get; set; } // From, To
 }
 ```
 

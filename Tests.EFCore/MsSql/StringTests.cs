@@ -107,8 +107,8 @@ namespace Tests.EF
             //assert
             Assert.Equal(2, filtered.Count);
 
-            Assert.Equal("startswithcase", filtered[0].StartsWithCase);
-            Assert.Equal("StartsWithCase", filtered[1].StartsWithCase);
+            Assert.Equal("StartsWithCase", filtered[0].StartsWithCase);
+            Assert.Equal("startswithcase", filtered[1].StartsWithCase);
         }
 
         [Fact]

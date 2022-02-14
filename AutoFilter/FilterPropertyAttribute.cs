@@ -36,6 +36,47 @@ namespace AutoFilter
 
         public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
         {
+            if (filterPropertyValue is IRange range)
+                return GetRangeExpression(parameter, inMemory, filterPropertyInfo, range, filter);
+
+            return GetScalarExpression(parameter, inMemory, filterPropertyInfo, filterPropertyValue, filter);
+        }
+
+        protected Expression GetRangeExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, IRange range, object filter)
+        {
+            var @from = range.From;
+            var @to = range.To;
+            if (@from == null && @to == null) throw new ArgumentException("Range From and To are empty");
+
+            Expression fromExpr = null, toExpr = null;
+            if (@from != null)
+            {
+                var property = GetPropertyExpression(parameter, filterPropertyInfo);
+                Expression value = Expression.Constant(@from);
+                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+                fromExpr = GetBody(property, value, inMemory, FilterCondition.GreaterOrEqual);
+
+                fromExpr = AddNullChecks(fromExpr, inMemory, parameter, property);
+
+                if (@to == null) return fromExpr;
+            }
+
+            if (@to != null)
+            {
+                var property = GetPropertyExpression(parameter, filterPropertyInfo);
+                Expression value = Expression.Constant(@to);
+                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+                toExpr = GetBody(property, value, inMemory, FilterCondition.LessOrEqual);
+                toExpr = AddNullChecks(toExpr, inMemory, parameter, property);
+
+                if (@from == null) return toExpr;
+            }
+
+            return Expression.AndAlso(fromExpr, toExpr);
+        }
+
+        protected Expression GetScalarExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
+        {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
             var propertyValue = GetPropertyValue(filterPropertyValue, filter);
 
@@ -45,27 +86,33 @@ namespace AutoFilter
 
             var body = GetBody(property, value, inMemory);
 
-            if (inMemory)
+            body = AddNullChecks(body, inMemory, parameter, property);
+
+            return body;
+        }
+
+        protected Expression AddNullChecks(Expression body, bool inMemory, ParameterExpression parameter, Expression property)
+        {
+            if (!inMemory) return body;
+
+            var nullChecks = new List<Expression>();
+
+            var nestedNullCheck = GetNestedNullCheckExpression(parameter);
+            if (nestedNullCheck != null) nullChecks.Add(nestedNullCheck);
+
+            //for Nullable ValueType we don't generate a null check because it don't needed
+            if (!property.Type.IsValueType)
             {
-                var nullChecks = new List<Expression>();
-
-                var nestedNullCheck = GetNestedNullCheckExpression(parameter);
-                if (nestedNullCheck != null) nullChecks.Add(nestedNullCheck);
-
-                //for Nullable ValueType we don't generate a null check because it don't needed
-                if (!property.Type.IsValueType)
-                {
-                    var propertyNullCheck = GetNullCheckExpression(property);
-                    nullChecks.Add(propertyNullCheck);
-                }
-                if (nullChecks.Any())
-                {
-                    nullChecks.Add(body);
-                    body = nullChecks.Aggregate(Expression.AndAlso);
-                }
+                var propertyNullCheck = GetNullCheckExpression(property);
+                nullChecks.Add(propertyNullCheck);
+            }
+            if (nullChecks.Any())
+            {
+                nullChecks.Add(body);
+                body = nullChecks.Aggregate(Expression.AndAlso);
             }
 
-            return body;                      
+            return body;
         }
 
         protected virtual Expression GetNullCheckExpression(Expression propertyExpression)
@@ -88,9 +135,9 @@ namespace AutoFilter
             return TargetPropertyName ?? filterPropertyInfo.Name;
         }
 
-        protected virtual Expression GetBody(MemberExpression property, Expression value, bool inMemory)
+        protected virtual Expression GetBody(MemberExpression property, Expression value, bool inMemory, FilterCondition? condition = null)
         {
-            var func = GetBodyBuilderFunc(property.Type);
+            var func = GetBodyBuilderFunc(property.Type, condition);
 
             return func(property, value);
         }
@@ -100,12 +147,14 @@ namespace AutoFilter
             return Expression.Property(parameter, GetPropertyName(filterPropertyInfo));
         }
 
-        protected virtual Func<MemberExpression, Expression, Expression> GetBodyBuilderFunc(Type propertyType)
+        protected virtual Func<MemberExpression, Expression, Expression> GetBodyBuilderFunc(Type propertyType, FilterCondition? condition)
         {
             if (propertyType == typeof(string))
                 return GetStringBuilderFunc();
+            
+            var cond = condition ?? FilterCondition;
 
-            return FilterCondition switch
+            return cond switch
             {
                 FilterCondition.Equal => Expression.Equal,
                 FilterCondition.Greater => Expression.GreaterThan,
@@ -126,7 +175,7 @@ namespace AutoFilter
 
             var startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) });
             var contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
-            var toLower = typeof(string).GetMethod(nameof(string.ToLower), new Type[] { });
+            var toLower = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
 
             StringStartWithFunc = (p, v) => Expression.Call(p, startsWith, v);
             StringContainsFunc = (p, v) => Expression.Call(p, contains, v);
