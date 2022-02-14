@@ -145,7 +145,7 @@ public class ProductController : Controller
         if (!string.IsNullOrEmpty(filter.Text))
             query = query.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.StartsWith(filter.Text));
 
-        query = query.AutoFilter(filter);
+        query = query.AutoFilter(filter);  //Ignore Text property
 
         return query.ToListAsync();
     }
