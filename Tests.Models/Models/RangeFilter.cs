@@ -12,5 +12,7 @@ namespace Tests.Models
 
         [NavigationProperty("NestedItem")]
         public Range<DateTime>? DateTimeValue { get; set; }
+
+        public string? SomeProperty { get; set; } = "23";
     }
 }

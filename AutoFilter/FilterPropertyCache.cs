@@ -28,6 +28,8 @@ namespace AutoFilter
             {
                 if (x.FilterPropertyAttribute == null)
                     x.FilterPropertyAttribute = new FilterPropertyAttribute();
+                else
+                    x.HasAttribute = true;
             }
         }
 

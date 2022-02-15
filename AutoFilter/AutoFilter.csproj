@@ -13,7 +13,7 @@
     <Description>AutoFilter allows to generate LinqExpression by DTO and pass this expression to ORM for SQL generation and database filtration or compile expression to delegate for in-memory filtration</Description>
     <Product>AutoFilter.Sql</Product>
     <PackageId>AutoFilter.Sql</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageIcon>logo-128x128.png</PackageIcon>
   </PropertyGroup>

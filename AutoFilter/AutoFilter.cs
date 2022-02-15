@@ -32,7 +32,8 @@ namespace AutoFilter
         protected static Expression<Func<TItem, bool>> GetExpression<TItem, TFilter>(TFilter filter, ComposeKind composeKind, bool inMemory)
         {
             var parameter = Expression.Parameter(typeof(TItem), "x");
-            var propertyExpressions = GetPropertiesExpressions(parameter, filter, inMemory);
+            var itemPropertyNames = ItemPropertyCache<TItem>.PropertyNames;
+            var propertyExpressions = GetPropertiesExpressions(parameter, filter, inMemory, itemPropertyNames);
 
             if (!propertyExpressions.Any())
             {
@@ -48,11 +49,12 @@ namespace AutoFilter
             return result;
         }
 
-        private static ICollection<Expression> GetPropertiesExpressions<TFilter>(ParameterExpression parameter, TFilter filter, bool inMemory)
+        private static ICollection<Expression> GetPropertiesExpressions<TFilter>(ParameterExpression parameter, TFilter filter, bool inMemory, HashSet<string> itemPropertyNames)
         {
             var filterProps = FilterPropertyCache<TFilter>.FilterProperties
-                    .Where(x => x.PropertyValueGetter.Invoke(filter) != null)
-                    .ToList();
+                .Where(x => x.HasAttribute || itemPropertyNames.Contains(x.PropertyInfo.Name))
+                .Where(x => x.PropertyValueGetter.Invoke(filter) != null)
+                .ToList();
 
             var result = new List<Expression>(capacity: filterProps.Count);
             foreach (var filterProperty in filterProps)
