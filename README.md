@@ -144,9 +144,9 @@ public class ProductController : Controller
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
     {
         return DbContext.Products
-			.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.Contains(filter.Text)) // custom search
-			.AutoFilter(filter) //Filter ignore Text property
-			.ToListAsync();
+            .Where(x => x.Name.Contains(filter.Text) || x.Category.Name.Contains(filter.Text)) // custom search
+            .AutoFilter(filter) //Filter ignore Text property
+            .ToListAsync();
     }
 }
 ```
@@ -159,12 +159,12 @@ public class ProductController : Controller
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
     {
-		var searchSpec = new Spec(x => x.Name.Contains(filter.Text) || x.Category.Name.Contains(filter.Text));
-		var filterSpec = new Spec(AutoFilter.CreateExpression<Product, ProductFilter>(filter));
+        var searchSpec = new Spec(x => x.Name.Contains(filter.Text) || x.Category.Name.Contains(filter.Text));
+        var filterSpec = new Spec(AutoFilter.CreateExpression<Product, ProductFilter>(filter));
 
         return DbContext.Products
-			.Where(searchSpec || filterSpec)
-			.ToListAsync();
+            .Where(searchSpec || filterSpec)
+            .ToListAsync();
     }
 }
 ```
