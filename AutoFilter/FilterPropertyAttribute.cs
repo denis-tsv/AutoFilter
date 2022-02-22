@@ -26,7 +26,7 @@ namespace AutoFilter
 
         protected static Expression NullConstant = Expression.Constant(null);
 
-        public string TargetPropertyName { get; set; }
+        public string? TargetPropertyName { get; set; }
 
         public StringFilterCondition StringFilter { get; set; } = DefaultStringFilterCondition;
 
@@ -48,7 +48,7 @@ namespace AutoFilter
             var @to = range.To;
             if (@from == null && @to == null) throw new ArgumentException("Range From and To are empty");
 
-            Expression fromExpr = null, toExpr = null;
+            Expression? fromExpr = null, toExpr = null;
             if (@from != null)
             {
                 var property = GetPropertyExpression(parameter, filterPropertyInfo);
@@ -72,7 +72,7 @@ namespace AutoFilter
                 if (@from == null) return toExpr;
             }
 
-            return Expression.AndAlso(fromExpr, toExpr);
+            return Expression.AndAlso(fromExpr!, toExpr!);
         }
 
         protected Expression GetScalarExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
@@ -120,7 +120,7 @@ namespace AutoFilter
             return Expression.NotEqual(propertyExpression, NullConstant);
         }
 
-        protected virtual Expression GetNestedNullCheckExpression(ParameterExpression parameter)
+        protected virtual Expression? GetNestedNullCheckExpression(ParameterExpression parameter)
         {
             return null;
         }
@@ -177,21 +177,21 @@ namespace AutoFilter
             var contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
             var toLower = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
 
-            StringStartWithFunc = (p, v) => Expression.Call(p, startsWith, v);
-            StringContainsFunc = (p, v) => Expression.Call(p, contains, v);
+            StringStartWithFunc = (p, v) => Expression.Call(p, startsWith!, v);
+            StringContainsFunc = (p, v) => Expression.Call(p, contains!, v);
 
             StringStartWithIgnoreCaseFunc = (p, v) =>
             {
-                var pl = Expression.Call(p, toLower);
-                var vl = Expression.Call(v, toLower);
-                return Expression.Call(pl, startsWith, vl);
+                var pl = Expression.Call(p, toLower!);
+                var vl = Expression.Call(v, toLower!);
+                return Expression.Call(pl, startsWith!, vl);
             };
 
             StringContainsIgnoreCaseFunc = (p, v) =>
             {
-                var pl = Expression.Call(p, toLower);
-                var vl = Expression.Call(v, toLower);
-                return Expression.Call(pl, contains, vl);
+                var pl = Expression.Call(p, toLower!);
+                var vl = Expression.Call(v, toLower!);
+                return Expression.Call(pl, contains!, vl);
             };
         }
 

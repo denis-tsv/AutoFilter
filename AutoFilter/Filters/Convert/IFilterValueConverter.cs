@@ -1,7 +1,9 @@
-﻿namespace AutoFilter.Filters.Convert
+﻿#nullable enable
+
+namespace AutoFilter.Filters.Convert
 {
     public interface IFilterValueConverter
     {
-        object Convert(object value);
+        object? Convert(object? value);
     }
 }

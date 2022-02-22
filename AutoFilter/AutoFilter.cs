@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -29,7 +31,7 @@ namespace AutoFilter
             return query.Where(expression.Compile());
         }
 
-        protected static Expression<Func<TItem, bool>> GetExpression<TItem, TFilter>(TFilter filter, ComposeKind composeKind, bool inMemory)
+        protected static Expression<Func<TItem, bool>>? GetExpression<TItem, TFilter>(TFilter filter, ComposeKind composeKind, bool inMemory)
         {
             var parameter = Expression.Parameter(typeof(TItem), "x");
             var itemPropertyNames = ItemPropertyCache<TItem>.PropertyNames;
@@ -59,7 +61,7 @@ namespace AutoFilter
             var result = new List<Expression>(capacity: filterProps.Count);
             foreach (var filterProperty in filterProps)
             {
-                var propertyExpression = filterProperty.FilterPropertyAttribute.GetExpression(parameter, inMemory, filterProperty.PropertyInfo, filterProperty.PropertyValueGetter(filter), filter);
+                var propertyExpression = filterProperty.FilterPropertyAttribute.GetExpression(parameter, inMemory, filterProperty.PropertyInfo, filterProperty.PropertyValueGetter(filter)!, filter!);
                 result.Add(propertyExpression);
             }
             return result;
@@ -117,7 +119,7 @@ namespace AutoFilter
             if (!propertyExists)
                 throw new InvalidOperationException($"There is no public property \"{propertyName}\" in type \"{typeof(TItem)}\"");
 
-            return result;
+            return result!;
         }
 
         #endregion        

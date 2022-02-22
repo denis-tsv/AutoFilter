@@ -1,9 +1,11 @@
-﻿namespace AutoFilter
+﻿#nullable enable
+
+namespace AutoFilter
 {
     public interface IRange
     {
-        object From { get; }
-        object To { get; }
+        object? From { get; }
+        object? To { get; }
     }
 
     public class Range<T> : IRange
@@ -12,7 +14,7 @@
         public T? From { get; set; }
         public T? To { get; set; }
 
-        object IRange.From => From;
-        object IRange.To => To;
+        object? IRange.From => From;
+        object? IRange.To => To;
     }
 }

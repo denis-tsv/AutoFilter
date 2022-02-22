@@ -1,4 +1,6 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
 
 namespace AutoFilter.Filters.Convert
 {
@@ -17,7 +19,7 @@ namespace AutoFilter.Filters.Convert
         protected override object GetPropertyValue(object filterPropertyValue, object filter)
         {
             var converter = FilterValueConvertersCache.GetConverter(ConverterType);
-            return converter.Convert(filterPropertyValue);
+            return converter.Convert(filterPropertyValue)!;
         }
     }
 }

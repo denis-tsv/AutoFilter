@@ -6,24 +6,24 @@ namespace AutoFilter
 {
     public class Spec<T>
     {
-        public static bool operator false(Spec<T> spec) => false;
+        public static bool operator false(Spec<T> _) => false;
 
-        public static bool operator true(Spec<T> spec) => false;
+        public static bool operator true(Spec<T> _) => false;
 
         public static Spec<T> operator &(Spec<T> spec1, Spec<T> spec2)
-            => new Spec<T>(spec1._expression.And(spec2._expression));
+            => new(spec1._expression.And(spec2._expression));
 
         public static Spec<T> operator |(Spec<T> spec1, Spec<T> spec2)
-            => new Spec<T>(spec1._expression.Or(spec2._expression));
+            => new(spec1._expression.Or(spec2._expression));
 
         public static Spec<T> operator !(Spec<T> spec)
-            => new Spec<T>(spec._expression.Not());
+            => new(spec._expression.Not());
 
         public static implicit operator Expression<Func<T, bool>>(Spec<T> spec)
             => spec._expression;
 
         public static implicit operator Spec<T>(Expression<Func<T, bool>> expression)
-            => new Spec<T>(expression);
+            => new(expression);
 
         private readonly Expression<Func<T, bool>> _expression;
 

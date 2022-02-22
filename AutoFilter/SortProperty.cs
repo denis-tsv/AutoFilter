@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace AutoFilter
 {
@@ -17,29 +16,33 @@ namespace AutoFilter
 
     public class SortProperty<TItem, TProperty> : ISortProperty<TItem>
     {
-        public PropertyInfo PropertyInfo { get; set; }
-        public Expression<Func<TItem, TProperty>> PropertyExpression { get; set; }
-        public Func<TItem, TProperty> PropertyDelegate { get; set; }
+        private readonly Expression<Func<TItem, TProperty>> _propertyExpression;
+        private readonly Func<TItem, TProperty> _propertyDelegate;
 
+        public SortProperty(Expression<Func<TItem, TProperty>> propertyExpression, Func<TItem, TProperty> propertyDelegate)
+        {
+            _propertyExpression = propertyExpression;
+            _propertyDelegate = propertyDelegate;
+        }
 
         public IOrderedQueryable<TItem> SortQueryable(IQueryable<TItem> items)
         {
-            return items.OrderBy(PropertyExpression);
+            return items.OrderBy(_propertyExpression);
         }
 
         public IOrderedQueryable<TItem> SortQueryableDesc(IQueryable<TItem> items)
         {
-            return items.OrderByDescending(PropertyExpression);
+            return items.OrderByDescending(_propertyExpression);
         }
 
         public IOrderedEnumerable<TItem> SortEnumerable(IEnumerable<TItem> items)
         {
-            return items.OrderBy(PropertyDelegate);
+            return items.OrderBy(_propertyDelegate);
         }
 
         public IOrderedEnumerable<TItem> SortEnumerableDesc(IEnumerable<TItem> items)
         {
-            return items.OrderByDescending(PropertyDelegate);
+            return items.OrderByDescending(_propertyDelegate);
         }
     }
 }

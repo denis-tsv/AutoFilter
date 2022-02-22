@@ -21,9 +21,9 @@ namespace AutoFilter
                     propertyInfo => propertyInfo.Name,
                     propertyInfo =>
                     {
-                        var createSortProperty = createSortPropertyMethodInfo.MakeGenericMethod(propertyInfo.PropertyType);
-                        var res = createSortProperty.Invoke(null, new object[] {propertyInfo});
-                        return (ISortProperty<TFilter>) res;
+                        var createSortProperty = createSortPropertyMethodInfo!.MakeGenericMethod(propertyInfo.PropertyType);
+                        var res = createSortProperty.Invoke(null, new object[] { propertyInfo });
+                        return (ISortProperty<TFilter>)res;
                     }
                 );
         }
@@ -34,12 +34,8 @@ namespace AutoFilter
             var body = Expression.Property(parameter, propertyInfo);
 
             var lambda = Expression.Lambda<Func<TFilter, TProperty>>(body, parameter);
-            var result = new SortProperty<TFilter, TProperty>
-            {
-                PropertyExpression = lambda,
-                PropertyInfo = propertyInfo,
-                PropertyDelegate = lambda.Compile()
-            };
+            var result = new SortProperty<TFilter, TProperty>(lambda, lambda.Compile());
+
             return result;
         }
     }

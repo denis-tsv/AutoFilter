@@ -15,22 +15,14 @@ namespace AutoFilter
                 .GetProperties()
                 .Where(x => x.CanRead && x.CanWrite)
                 .Where(x => x.GetCustomAttribute<NotAutoFilteredAttribute>() == null)
-                .Select(x => new FilterProperty<TFilter>
+                .Select(x => new
                 {
                     PropertyInfo = x,
                     FilterPropertyAttribute = x.GetCustomAttribute<FilterPropertyAttribute>(),
                     PropertyValueGetter = CreateValueGetter(x)
                 })
+                .Select(x => new FilterProperty<TFilter>(x.PropertyInfo, x.FilterPropertyAttribute ?? new FilterPropertyAttribute(), x.PropertyValueGetter, x.FilterPropertyAttribute != null)) //each property must have an attribute to generate an expression
                 .ToArray();
-
-            //each property must have an attribute to generate an expression
-            foreach (var x in FilterProperties)
-            {
-                if (x.FilterPropertyAttribute == null)
-                    x.FilterPropertyAttribute = new FilterPropertyAttribute();
-                else
-                    x.HasAttribute = true;
-            }
         }
 
         private static Func<TFilter, object> CreateValueGetter(PropertyInfo propertyInfo)
