@@ -29,6 +29,11 @@ namespace Tests.EF
             .EnableSensitiveDataLogging()
             .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=AutoFilter;Trusted_Connection=True;MultipleActiveResultSets=true");
             //.UseSqlServer(@"Data Source=127.0.0.1,1433;Initial Catalog=AutoFilter;User Id=sa;Password=<YourStrong!Passw0rd>;");
+
+#elif EF6
+
+        public TestContext() : base(@"Data Source=127.0.0.1,1433;Initial Catalog=AutoFilter;User Id=sa;Password=<YourStrong!Passw0rd>;")
+        {}
 #endif
         public DbSet<ConvertItem> ConvertItems { get; set; }
         public DbSet<FilterConditionItem> FilterConditionItems { get; set; }
