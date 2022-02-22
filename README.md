@@ -132,22 +132,39 @@ public class ProductFilter
 }
 ```
 
-## Search by text (google like)
-AutoFilter does't support google-like search by text. It is better to combine search by text and AutoFilter.
+## Custom search by text (google like)
+AutoFilter doesn't support custom search by text. It is better to combine search by text and AutoFilter.
+
+Combination with And clause:
+
 ```csharp
 public class ProductController : Controller
 {
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
     {
-        IQueryable<Product> = DbContext.Products;
+        return DbContext.Products
+			.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.Contains(filter.Text)) // custom search
+			.AutoFilter(filter) //Filter ignore Text property
+			.ToListAsync();
+    }
+}
+```
 
-        if (!string.IsNullOrEmpty(filter.Text))
-            query = query.Where(x => x.Name.Contains(filter.Text) || x.Category.Name.StartsWith(filter.Text));
+Combination with Or clause (using specification):
 
-        query = query.AutoFilter(filter);  //Ignore Text property
+```csharp
+public class ProductController : Controller
+{
+    [HttpGet]
+    public async Task<IEnumerable<Product>> GetProducts([FromQuery]ProductFilter filter)
+    {
+		var searchSpec = new Spec(x => x.Name.Contains(filter.Text) || x.Category.Name.Contains(filter.Text));
+		var filterSpec = new Spec(AutoFilter.CreateExpression<Product, ProductFilter>(filter));
 
-        return query.ToListAsync();
+        return DbContext.Products
+			.Where(searchSpec || filterSpec)
+			.ToListAsync();
     }
 }
 ```

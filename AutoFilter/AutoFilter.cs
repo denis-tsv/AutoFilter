@@ -15,7 +15,7 @@ namespace AutoFilter
             TFilter filter,
             ComposeKind composeKind = ComposeKind.And)
         {
-            var expression = GetExpression<TItem, TFilter>(filter, composeKind, false);
+            var expression = CreateExpression<TItem, TFilter>(filter, composeKind, false);
             if (expression == null) return query;
 
             return query.Where(expression);
@@ -25,17 +25,17 @@ namespace AutoFilter
             TFilter filter,
             ComposeKind composeKind = ComposeKind.And)
         {
-            var expression = GetExpression<TItem, TFilter>(filter, composeKind, true);
+            var expression = CreateExpression<TItem, TFilter>(filter, composeKind, true);
             if (expression == null) return query;
 
             return query.Where(expression.Compile());
         }
 
-        protected static Expression<Func<TItem, bool>>? GetExpression<TItem, TFilter>(TFilter filter, ComposeKind composeKind, bool inMemory)
+        public static Expression<Func<TItem, bool>>? CreateExpression<TItem, TFilter>(TFilter filter, ComposeKind composeKind = ComposeKind.And, bool addNullChecks = false)
         {
             var parameter = Expression.Parameter(typeof(TItem), "x");
             var itemPropertyNames = ItemPropertyCache<TItem>.PropertyNames;
-            var propertyExpressions = GetPropertiesExpressions(parameter, filter, inMemory, itemPropertyNames);
+            var propertyExpressions = GetPropertiesExpressions(parameter, filter, addNullChecks, itemPropertyNames);
 
             if (!propertyExpressions.Any())
             {

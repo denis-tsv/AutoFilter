@@ -18,7 +18,7 @@ namespace Tests.InMemory
             //act
             var filtered = InvalidCasesTestsData.Items.AutoFilter(filter).ToList();
 
-            //asssert
+            //assert
             Assert.Equal(1, filtered.Count);
             Assert.Equal(TargetEnum.Default, filtered[0].TargetEnum);
         }
@@ -31,7 +31,7 @@ namespace Tests.InMemory
 
             //act
             
-            //asssert
+            //assert
             Assert.ThrowsAny<Exception>(() => InvalidCasesTestsData.Items.AutoFilter(filter));
         }
 
@@ -42,9 +42,10 @@ namespace Tests.InMemory
             var filter = new InvalidCaseFilter { NotExistsProperty = "First" };
 
             //act
-            
-            //asssert
-            Assert.ThrowsAny<Exception>(() => InvalidCasesTestsData.Items.AutoFilter(filter));
+            var result = InvalidCasesTestsData.Items.AutoFilter(filter).ToList();
+
+            //assert
+            Assert.Equal(InvalidCasesTestsData.Items.Count, result.Count);
         }
     }
 }
