@@ -4,10 +4,6 @@
     {
         StartsWith,
         Contains,
-        //NotContains,
-        //Exists,
-        //NotExists,
-        //Equals
-        //EndsWith
+        Equals
     }
 }

@@ -102,7 +102,7 @@ public class ProductController : Controller
 
 ## String comparison
 
-AutoFilter allows to compare strings using StartsWith and Contains modes. StartsWith mode is default. To enable Contains mode you need to add FilterProperty attribute to corresponding property of filter DTO.
+AutoFilter allows to compare strings using StartsWith, Contains and Equals modes. StartsWith mode is default. To enable Contains or Equals mode you need to add FilterProperty attribute to corresponding property of filter DTO.
 
 ```csharp
 public class ProductFilter

@@ -195,6 +195,8 @@ namespace AutoFilter
         private static readonly Func<MemberExpression, Expression, Expression> StringContainsFunc;
         private static readonly Func<MemberExpression, Expression, Expression> StringStartWithIgnoreCaseFunc;
         private static readonly Func<MemberExpression, Expression, Expression> StringContainsIgnoreCaseFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringEqualsFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringEqualsIgnoreCaseFunc;
 
         static FilterPropertyAttribute()
         {
@@ -219,6 +221,15 @@ namespace AutoFilter
                 var vl = Expression.Call(v, toLower!);
                 return Expression.Call(pl, contains!, vl);
             };
+
+            StringEqualsFunc = (p, v) => Expression.Equal(p, v);
+
+            StringEqualsIgnoreCaseFunc = (p, v) =>
+            {
+                var pl = Expression.Call(p, toLower!);
+                var vl = Expression.Call(v, toLower!);
+                return Expression.Equal(pl, vl);
+            };
         }
 
         protected virtual Func<MemberExpression, Expression, Expression> GetStringBuilderFunc()
@@ -229,6 +240,8 @@ namespace AutoFilter
                 (StringFilterCondition.StartsWith, false) => StringStartWithFunc,
                 (StringFilterCondition.Contains, true)    => StringContainsIgnoreCaseFunc,
                 (StringFilterCondition.Contains, false)   => StringContainsFunc,
+                (StringFilterCondition.Equals, true)      => StringEqualsIgnoreCaseFunc,
+                (StringFilterCondition.Equals, false)     => StringEqualsFunc,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

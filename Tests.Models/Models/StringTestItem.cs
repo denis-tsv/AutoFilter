@@ -14,6 +14,10 @@
 
         public string StartsWithIgnoreCase { get; set; }
 
+        public string EqualsCase { get; set; }
+
+        public string EqualsIgnoreCase { get; set; }
+
         public string PropertyName { get; set; }
 
         public string TargetStringProperty { get; set; }

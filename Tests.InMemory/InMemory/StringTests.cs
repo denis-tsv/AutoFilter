@@ -83,7 +83,37 @@ namespace Tests.InMemory
             Assert.Equal(2, filtered.Count);
             Assert.Equal("startswithignorecasetest", filtered[0].StartsWithIgnoreCase);
             Assert.Equal("StartsWithIgnoreCaseTest", filtered[1].StartsWithIgnoreCase);
-            
+        }
+
+        [Fact]
+        public void EqualsCase()
+        {
+            //arrange
+            var filter = new StringFilter { EqualsCase = "EqualsCase" };
+
+            //act
+            var filtered = StringTestsData.Items.AutoFilter(filter).ToList();
+
+            //assert
+            Assert.Equal(1, filtered.Count);
+            Assert.Equal("EqualsCase", filtered[0].EqualsCase);
+        }
+
+        [Fact]
+        public void EqualsIgnoreCase()
+        {
+            //arrange
+            var filter = new StringFilter { EqualsIgnoreCase = "EqualsIgnoreCase" };
+
+            //act
+            var filtered = StringTestsData.Items.AutoFilter(filter)
+                .OrderBy(x => x.EqualsIgnoreCase)
+                .ToList();
+
+            //assert
+            Assert.Equal(2, filtered.Count);
+            Assert.Equal("equalsignorecase", filtered[0].EqualsIgnoreCase);
+            Assert.Equal("EqualsIgnoreCase", filtered[1].EqualsIgnoreCase);
         }
 
         [Fact]

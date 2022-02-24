@@ -137,6 +137,44 @@ namespace Tests.EF
         }
 
         [Fact]
+        public void EqualsCase()
+        {
+            //arrange
+            Init();
+            var filter = new StringFilter { EqualsCase = "EqualsCase" };
+
+            //act
+            var filtered = Context.StringTestItems
+                .AutoFilter(filter)
+                .OrderBy(x => x.EqualsCase)
+                .ToList();
+
+            //assert
+            Assert.Equal(2, filtered.Count);
+            Assert.Equal("EqualsCase", filtered[0].EqualsCase);
+            Assert.Equal("equalscase", filtered[1].EqualsCase); //MS SQL string comparison not case sensitive, but postgres is case sensitive
+        }
+
+        [Fact]
+        public void EqualsIgnoreCase()
+        {
+            //arrange
+            Init();
+            var filter = new StringFilter { EqualsIgnoreCase = "EqualsIgnoreCase" };
+
+            //act
+            var filtered = Context.StringTestItems
+                .AutoFilter(filter)
+                .OrderBy(x => x.EqualsIgnoreCase)
+                .ToList();
+
+            //assert
+            Assert.Equal(2, filtered.Count);
+            Assert.Equal("EqualsIgnoreCase", filtered[0].EqualsIgnoreCase);
+            Assert.Equal("equalsignorecase", filtered[1].EqualsIgnoreCase);
+        }
+
+        [Fact]
         public void PropertyName()
         {
             //arrange

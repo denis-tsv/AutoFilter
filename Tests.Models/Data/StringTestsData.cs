@@ -85,6 +85,58 @@ namespace Tests.Data
                 StartsWithIgnoreCase = "notstartswithIgnoreCase"
             },
 
+            //EqualsCase
+            new StringTestItem
+            {
+                EqualsCase = "EqualsCase"
+            },
+            new StringTestItem
+            {
+                EqualsCase = "equalscase"
+            },
+            new StringTestItem
+            {
+                EqualsCase = "EqualsCaseTest"
+            },
+            new StringTestItem
+            {
+                EqualsCase = "equalscasetest"
+            },
+            new StringTestItem
+            {
+                EqualsCase = "TestEqualsCase"
+            },
+            new StringTestItem
+            {
+                EqualsCase = "testequalscase"
+            },
+
+            //EqualsIgnoreCase
+            new StringTestItem
+            {
+                EqualsIgnoreCase = "EqualsIgnoreCase"
+            },
+            new StringTestItem
+            {
+                EqualsIgnoreCase = "equalsignorecase"
+            },
+            new StringTestItem
+            {
+                EqualsIgnoreCase = "EqualsIgnoreCaseTest"
+            },
+            new StringTestItem
+            {
+                EqualsIgnoreCase = "equalsignorecasetest"
+            },
+            new StringTestItem
+            {
+                EqualsIgnoreCase = "TestEqualsIgnoreCase"
+            },
+            new StringTestItem
+            {
+                EqualsIgnoreCase = "testequalsignorecase"
+            },
+
             //PropertyName
             new StringTestItem
             {

@@ -18,6 +18,12 @@ namespace Tests.Models
         [FilterProperty(StringFilter = StringFilterCondition.StartsWith, IgnoreCase = true)]
         public string StartsWithIgnoreCase { get; set; }
 
+        [FilterProperty(StringFilter = StringFilterCondition.Equals, IgnoreCase = false)]
+        public string EqualsCase { get; set; }
+
+        [FilterProperty(StringFilter = StringFilterCondition.Equals, IgnoreCase = true)]
+        public string EqualsIgnoreCase { get; set; }
+
         [FilterProperty(TargetPropertyName = "PropertyName")]
         public string TargetStringProperty { get; set; }
 
