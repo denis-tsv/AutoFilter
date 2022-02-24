@@ -38,7 +38,7 @@ Filter DTO
 ```csharp
 public class ProductFilter
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public int? CostFrom { get; set; }
     public int? CostTo { get; set; }
 }
@@ -108,7 +108,7 @@ AutoFilter allows to compare strings using StartsWith and Contains modes. Starts
 public class ProductFilter
 {
     [FilterProperty(StringFilter = StringFilterCondition.Contains)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 ```
 
@@ -118,7 +118,7 @@ Also by default string comparison is case sensitive. You can enable ignore case 
 public class ProductFilter
 {
     [FilterProperty(IgnoreCase = true)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 }
 ```
 
@@ -128,7 +128,7 @@ And if name of filter property does not correspond to name of entity property th
 public class ProductFilter
 {
     [FilterProperty(TargetPropertyName = "Name")] // or TargetPropertyName = nameof(Product.Name)
-    public string ProductName { get; set; }
+    public string? ProductName { get; set; }
 }
 ```
 
@@ -185,11 +185,30 @@ public class ProductFilter
 ```
 
 ## Range
-AutoFilter allows to specify Range for value types. One of properties From and To for Range object must be specified. AutoFilter fill generate query Cost >= @from AND Cost <= @to
+AutoFilter allows to specify Range for value types. One of properties From and To for Range object must be specified. AutoFilter fill generate expression Cost >= @from AND Cost <= @to
 ```csharp
 public class ProductFilter
 {
-    public Range<int> Cost { get; set; } // From, To
+    public Range<int>? Cost { get; set; } // From, To
+}
+```
+
+## Filter by item in list of values
+AutoFilter allows to filter by item in list of values. Both array and IEnumerable<> types of filter's property supported. Will be generated expression Where(x => filter.Status.Contains(x.Status))
+```csharp
+public class Product
+{
+    public ProductStatus Status { get; set; } // Some enum
+	public string? Code { get; set; } 
+	public int? Value { get; set; } 
+}
+
+
+public class ProductFilter
+{
+    public ProductStatus[]? Status { get; set; }
+	public List<string>? Code { get; set; }
+	public IEnumerable<int>? Value { get; set; }
 }
 ```
 
@@ -226,7 +245,7 @@ public class Product
 public class ProductFilter
 {
     [NavigationProperty("Producer", TargetPropertyName = "Name")] 
-    public string ProducerName { get; set; }
+    public string? ProducerName { get; set; }
 }
 ```
 
@@ -251,7 +270,7 @@ public class Product
 public class ProductFilter
 {
     [NavigationProperty("Producer.Country", TargetPropertyName = "Name")] 
-    public string ProducerName { get; set; }
+    public string? ProducerCountryName { get; set; }
 }
 ```
 
@@ -282,7 +301,7 @@ public class StringToEnumConverter : IFilterValueConverter
 public class ProductFilter
 {
     [ConvertFilter(typeof(StringToEnumConverter))] 
-    public string State { get; set; }
+    public string? State { get; set; }
 }
 ```
 
@@ -294,9 +313,9 @@ If your DTO contains properties for filtering and some other properties which yo
 public class ProductFilter
 {    
     [NotAutoFiltered] //property will be excluded from autofiltering because it has NotAutoFiltered attrubute
-    public string OrderBy { get; set; } //Name of property for sorting, for example Cost
+    public string? OrderBy { get; set; } //Name of property for sorting, for example Cost
     
-    public int Cost { get; set; }
+    public int? Cost { get; set; }
 }
 
 ```

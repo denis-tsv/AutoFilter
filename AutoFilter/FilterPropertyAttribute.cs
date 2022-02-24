@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -39,6 +40,9 @@ namespace AutoFilter
             if (filterPropertyValue is IRange range)
                 return GetRangeExpression(parameter, inMemory, filterPropertyInfo, range, filter);
 
+            if (filterPropertyValue is IEnumerable items && filterPropertyValue.GetType() != typeof(string))
+                return GetEnumerableExpression(parameter, inMemory, filterPropertyInfo, items, filter);
+
             return GetScalarExpression(parameter, inMemory, filterPropertyInfo, filterPropertyValue, filter);
         }
 
@@ -53,7 +57,9 @@ namespace AutoFilter
             {
                 var property = GetPropertyExpression(parameter, filterPropertyInfo);
                 Expression value = Expression.Constant(@from);
-                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+                if (value.Type != property.Type)
+                    value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+
                 fromExpr = GetBody(property, value, inMemory, FilterCondition.GreaterOrEqual);
 
                 fromExpr = AddNullChecks(fromExpr, inMemory, parameter, property);
@@ -65,7 +71,8 @@ namespace AutoFilter
             {
                 var property = GetPropertyExpression(parameter, filterPropertyInfo);
                 Expression value = Expression.Constant(@to);
-                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+                if (value.Type != property.Type)
+                    value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
                 toExpr = GetBody(property, value, inMemory, FilterCondition.LessOrEqual);
                 toExpr = AddNullChecks(toExpr, inMemory, parameter, property);
 
@@ -75,14 +82,32 @@ namespace AutoFilter
             return Expression.AndAlso(fromExpr!, toExpr!);
         }
 
+        protected Expression GetEnumerableExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, IEnumerable items, object filter)
+        {
+            Expression property = GetPropertyExpression(parameter, filterPropertyInfo);
+            Expression itemsExpr = Expression.Constant(items);
+
+            var (containsMethodInfo, elementType) = EnumerablePropertyCache.GetInfo(filterPropertyInfo);
+            
+            var convertedProperty = elementType != property.Type ? 
+                Expression.Convert(property, elementType) : //to convert from enum to object or from int? to int
+                property;
+
+            Expression result = Expression.Call(null, containsMethodInfo, itemsExpr, convertedProperty);
+
+            result = AddNullChecks(result, inMemory, parameter, property, true);
+
+            return result;
+        }
+
         protected Expression GetScalarExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
         {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
             var propertyValue = GetPropertyValue(filterPropertyValue, filter);
 
             Expression value = Expression.Constant(propertyValue);
-
-            value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+            if (value.Type != property.Type)
+                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
 
             var body = GetBody(property, value, inMemory);
 
@@ -91,7 +116,7 @@ namespace AutoFilter
             return body;
         }
 
-        protected Expression AddNullChecks(Expression body, bool inMemory, ParameterExpression parameter, Expression property)
+        protected Expression AddNullChecks(Expression body, bool inMemory, ParameterExpression parameter, Expression property, bool isEnumerable = false)
         {
             if (!inMemory) return body;
 
@@ -101,7 +126,8 @@ namespace AutoFilter
             if (nestedNullCheck != null) nullChecks.Add(nestedNullCheck);
 
             //for Nullable ValueType we don't generate a null check because it don't needed
-            if (!property.Type.IsValueType)
+            if ((!property.Type.IsValueType && !isEnumerable) || 
+                (property.Type.IsValueType && isEnumerable && property.Type.Name.StartsWith("Nullable")))
             {
                 var propertyNullCheck = GetNullCheckExpression(property);
                 nullChecks.Add(propertyNullCheck);

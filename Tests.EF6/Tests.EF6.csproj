@@ -17,6 +17,7 @@
     <Compile Include="..\Tests.EFCore\CombinedTest.cs" Link="CombinedTest.cs" />
     <Compile Include="..\Tests.EFCore\MsSql\CompositeKindTests.cs" Link="MsSql\CompositeKindTests.cs" />
     <Compile Include="..\Tests.EFCore\MsSql\ConverterTests.cs" Link="MsSql\ConverterTests.cs" />
+    <Compile Include="..\Tests.EFCore\MsSql\EnumerableTests.cs" Link="MsSql\EnumerableTests.cs" />
     <Compile Include="..\Tests.EFCore\MsSql\FilterConditionTests.cs" Link="MsSql\FilterConditionTests.cs" />
     <Compile Include="..\Tests.EFCore\MsSql\InvalidCasesTests.cs" Link="MsSql\InvalidCasesTests.cs" />
     <Compile Include="..\Tests.EFCore\MsSql\KillerFeatureTests.cs" Link="MsSql\KillerFeatureTests.cs" />

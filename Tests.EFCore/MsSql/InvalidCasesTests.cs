@@ -29,9 +29,10 @@ namespace Tests.EF
             var filter = new InvalidCaseFilter { NotExistsProperty = "First" };
 
             //act
-            
+            var result = Context.InvalidCaseItems.AutoFilter(filter).ToList();
+
             //asssert
-            Assert.ThrowsAny<Exception>(() => Context.InvalidCaseItems.AutoFilter(filter).ToList());
+            Assert.Equal(result.Count, Context.InvalidCaseItems.Count());
         }
     }
 }

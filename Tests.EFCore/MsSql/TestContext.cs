@@ -27,8 +27,8 @@ namespace Tests.EF
             => optionsBuilder
             //.UseLoggerFactory(loggerFactory)  //tie-up DbContext with LoggerFactory object
             .EnableSensitiveDataLogging()
-            .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=AutoFilter;Trusted_Connection=True;MultipleActiveResultSets=true");
-            //.UseSqlServer(@"Data Source=127.0.0.1,1433;Initial Catalog=AutoFilter;User Id=sa;Password=<YourStrong!Passw0rd>;");
+            //.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=AutoFilter;Trusted_Connection=True;MultipleActiveResultSets=true");
+            .UseSqlServer(@"Data Source=127.0.0.1,1433;Initial Catalog=AutoFilter;User Id=sa;Password=<YourStrong!Passw0rd>;");
 
 #elif EF6
 
@@ -45,5 +45,6 @@ namespace Tests.EF
         public DbSet<NotAutoFilteredItem> NotAutoFilteredItems { get; set; }
         public DbSet<RangeFilterItem> RangeFilterItems { get; set; }
         public DbSet<RangeFilterNestedItem> RangeFilterNestedItems { get; set; }
+        public DbSet<EnumerableFilterItem> EnumerableFilterItems { get; set; }
     }
 }

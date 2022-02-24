@@ -46,6 +46,7 @@ namespace Tests.EF
 //                Context.InvalidCaseItems.AddRange(InvalidCasesTestsData.Items);
 //                Context.NotAutoFilteredItems.AddRange(NotAutoFilteredData.Items);
 //                Context.RangeFilterItems.AddRange(RangeData.Items);
+//                Context.EnumerableFilterItems.AddRange(EnumerableTestsData.Items);
 //                Context.SaveChanges();
 
 //                initialized = true;
