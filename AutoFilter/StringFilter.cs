@@ -4,6 +4,7 @@
     {
         StartsWith,
         Contains,
-        Equals
+        Equals,
+        EndsWith
     }
 }

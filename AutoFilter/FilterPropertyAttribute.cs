@@ -197,16 +197,21 @@ namespace AutoFilter
         private static readonly Func<MemberExpression, Expression, Expression> StringContainsIgnoreCaseFunc;
         private static readonly Func<MemberExpression, Expression, Expression> StringEqualsFunc;
         private static readonly Func<MemberExpression, Expression, Expression> StringEqualsIgnoreCaseFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringEndsWithFunc;
+        private static readonly Func<MemberExpression, Expression, Expression> StringEndsWithIgnoreCaseFunc;
 
         static FilterPropertyAttribute()
         {
 
             var startsWith = typeof(string).GetMethod(nameof(string.StartsWith), new[] { typeof(string) });
+            var endsWith = typeof(string).GetMethod(nameof(string.EndsWith), new[] { typeof(string) });
             var contains = typeof(string).GetMethod(nameof(string.Contains), new[] { typeof(string) });
             var toLower = typeof(string).GetMethod(nameof(string.ToLower), Array.Empty<Type>());
 
             StringStartWithFunc = (p, v) => Expression.Call(p, startsWith!, v);
             StringContainsFunc = (p, v) => Expression.Call(p, contains!, v);
+            StringEndsWithFunc = (p, v) => Expression.Call(p, endsWith!, v);
+            StringEqualsFunc = (p, v) => Expression.Equal(p, v);
 
             StringStartWithIgnoreCaseFunc = (p, v) =>
             {
@@ -222,7 +227,12 @@ namespace AutoFilter
                 return Expression.Call(pl, contains!, vl);
             };
 
-            StringEqualsFunc = (p, v) => Expression.Equal(p, v);
+            StringEndsWithIgnoreCaseFunc = (p, v) =>
+            {
+                var pl = Expression.Call(p, toLower!);
+                var vl = Expression.Call(v, toLower!);
+                return Expression.Call(pl, endsWith!, vl);
+            };
 
             StringEqualsIgnoreCaseFunc = (p, v) =>
             {
@@ -242,6 +252,8 @@ namespace AutoFilter
                 (StringFilterCondition.Contains, false)   => StringContainsFunc,
                 (StringFilterCondition.Equals, true)      => StringEqualsIgnoreCaseFunc,
                 (StringFilterCondition.Equals, false)     => StringEqualsFunc,
+                (StringFilterCondition.EndsWith, true)    => StringEndsWithIgnoreCaseFunc,
+                (StringFilterCondition.EndsWith, false)   => StringEndsWithFunc,
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

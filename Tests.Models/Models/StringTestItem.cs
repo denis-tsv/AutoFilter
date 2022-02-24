@@ -14,6 +14,10 @@
 
         public string StartsWithIgnoreCase { get; set; }
 
+        public string EndsWithCase { get; set; }
+
+        public string EndsWithIgnoreCase { get; set; }
+
         public string EqualsCase { get; set; }
 
         public string EqualsIgnoreCase { get; set; }

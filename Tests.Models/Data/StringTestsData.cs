@@ -85,6 +85,42 @@ namespace Tests.Data
                 StartsWithIgnoreCase = "notstartswithIgnoreCase"
             },
 
+            //EndsWithCase
+            new StringTestItem
+            {
+                EndsWithCase = "EndsWithCase"
+            },
+            new StringTestItem
+            {
+                EndsWithCase = "endswithcase"
+            },
+            new StringTestItem
+            {
+                EndsWithCase = "EndsWithCaseNot"
+            },
+            new StringTestItem
+            {
+                EndsWithCase = "endswithcasenot"
+            },
+
+            //EndsWithIgnoreCase
+            new StringTestItem
+            {
+                EndsWithIgnoreCase = "EndsWithIgnoreCase"
+            },
+            new StringTestItem
+            {
+                EndsWithIgnoreCase = "endswithignorecase"
+            },
+            new StringTestItem
+            {
+                EndsWithIgnoreCase = "EndsWithIgnoreCaseNot"
+            },
+            new StringTestItem
+            {
+                EndsWithIgnoreCase = "endswithignorecasenot"
+            },
+
             //EqualsCase
             new StringTestItem
             {

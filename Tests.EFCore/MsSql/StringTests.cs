@@ -137,6 +137,46 @@ namespace Tests.EF
         }
 
         [Fact]
+        public void EndsWithCase()
+        {
+            //arrange
+            Init();
+            var filter = new StringFilter { EndsWithCase = "EndsWithCase" };
+
+            //act
+            var filtered = Context.StringTestItems
+                .AutoFilter(filter)
+                .OrderBy(x => x.EndsWithCase)
+                .ToList();
+
+            //assert
+            Assert.Equal(2, filtered.Count);
+
+            Assert.Equal("EndsWithCase", filtered[0].EndsWithCase);
+            Assert.Equal("endswithcase", filtered[1].EndsWithCase);
+        }
+
+        [Fact]
+        public void EndsWithIgnoreCase()
+        {
+            //arrange
+            Init();
+            var filter = new StringFilter { EndsWithIgnoreCase = "EndsWithIgnoreCase" };
+
+            //act
+            var filtered = Context.StringTestItems
+                .AutoFilter(filter)
+                .OrderBy(x => x.EndsWithIgnoreCase)
+                .ToList();
+
+            //assert
+            Assert.Equal(2, filtered.Count);
+
+            Assert.Equal("EndsWithIgnoreCase", filtered[1].EndsWithIgnoreCase);
+            Assert.Equal("endswithignorecase", filtered[0].EndsWithIgnoreCase);
+        }
+
+        [Fact]
         public void EqualsCase()
         {
             //arrange
