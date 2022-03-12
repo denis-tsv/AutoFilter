@@ -12,7 +12,7 @@ namespace Tests.InMemory
         public void OrderBy()
         {
             //arrange
-            var propertyName = nameof(StringTestItem.NoAttribute);
+            var propertyName = nameof(StringTestItem.NoAttribute).ToLower();
 
             //act
             var orderedAuto = StringTestsData.Items

@@ -18,7 +18,7 @@ namespace AutoFilter
             SortProperties = typeof(TFilter)
                 .GetProperties()
                 .ToDictionary(
-                    propertyInfo => propertyInfo.Name,
+                    propertyInfo => propertyInfo.Name.ToLower(),
                     propertyInfo =>
                     {
                         var createSortProperty = createSortPropertyMethodInfo!.MakeGenericMethod(propertyInfo.PropertyType);

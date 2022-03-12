@@ -115,7 +115,7 @@ namespace AutoFilter
         
         private static ISortProperty<TItem> GetSortProperty<TItem>(string propertyName)
         {
-            var propertyExists = SortPropertyCache<TItem>.SortProperties.TryGetValue(propertyName, out var result);
+            var propertyExists = SortPropertyCache<TItem>.SortProperties.TryGetValue(propertyName.ToLower(), out var result);
             if (!propertyExists)
                 throw new InvalidOperationException($"There is no public property \"{propertyName}\" in type \"{typeof(TItem)}\"");
 
