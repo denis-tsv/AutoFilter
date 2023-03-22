@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace AutoFilter
+namespace AutoFilter;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class NotAutoFilteredAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class NotAutoFilteredAttribute : Attribute
-    {
-    }
 }

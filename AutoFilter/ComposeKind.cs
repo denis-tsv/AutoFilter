@@ -1,8 +1,7 @@
-﻿namespace AutoFilter
+﻿namespace AutoFilter;
+
+public enum ComposeKind
 {
-    public enum ComposeKind
-    {
-        And,
-        Or
-    }
+    And,
+    Or
 }

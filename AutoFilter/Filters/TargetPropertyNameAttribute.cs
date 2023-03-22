@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace AutoFilter.Filters
+namespace AutoFilter.Filters;
+
+public class TargetPropertyNameAttribute : FilterPropertyAttribute
 {
-    public class TargetPropertyNameAttribute : FilterPropertyAttribute
+    public TargetPropertyNameAttribute(string propertyName)
     {
-        public TargetPropertyNameAttribute(string propertyName)
-        {
-            TargetPropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
-        }        
-    }
+        TargetPropertyName = propertyName ?? throw new ArgumentNullException(nameof(propertyName));
+    }        
 }

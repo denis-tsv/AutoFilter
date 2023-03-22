@@ -1,11 +1,10 @@
-﻿namespace AutoFilter
+﻿namespace AutoFilter;
+
+public enum FilterCondition
 {
-    public enum FilterCondition
-    {
-        Equal,
-        Less,
-        LessOrEqual,
-        Greater,
-        GreaterOrEqual
-    }
+    Equal,
+    Less,
+    LessOrEqual,
+    Greater,
+    GreaterOrEqual
 }

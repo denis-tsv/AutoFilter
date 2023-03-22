@@ -1,10 +1,9 @@
-﻿namespace AutoFilter.Filters
+﻿namespace AutoFilter.Filters;
+
+public class StringFilterAttribute : FilterPropertyAttribute
 {
-    public class StringFilterAttribute : FilterPropertyAttribute
+    public StringFilterAttribute(StringFilterCondition condition)
     {
-        public StringFilterAttribute(StringFilterCondition condition)
-        {
-            StringFilter = condition;
-        }        
-    }
+        StringFilter = condition;
+    }        
 }

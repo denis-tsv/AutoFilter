@@ -4,49 +4,48 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace AutoFilter.Filters
+namespace AutoFilter.Filters;
+
+public class NavigationPropertyAttribute : FilterPropertyAttribute
 {
-    public class NavigationPropertyAttribute : FilterPropertyAttribute
+    public NavigationPropertyAttribute(string objectName)
     {
-        public NavigationPropertyAttribute(string objectName)
+        Path = objectName ?? throw new ArgumentNullException(nameof(objectName));
+    }
+
+    public string Path { get; }
+
+    protected override Expression GetNestedNullCheckExpression(ParameterExpression parameter)
+    {  
+        var nullChecks = new List<Expression>();
+        var propNames = Path.Split('.');
+        var property = Expression.Property(parameter, propNames[0]);
+
+        var nullCheck = Expression.NotEqual(property, NullConstant);
+        nullChecks.Add(nullCheck);
+
+        for (int i = 1; i < propNames.Length; i++)
         {
-            Path = objectName ?? throw new ArgumentNullException(nameof(objectName));
+            property = Expression.Property(property, propNames[i]);
+            nullCheck = Expression.NotEqual(property, NullConstant);
+            nullChecks.Add(nullCheck);                    
         }
 
-        public string Path { get; }
+        var aggregatedNullChecks = nullChecks.Aggregate((cur, next) => Expression.AndAlso(cur, next));
+        return aggregatedNullChecks;
+    }
 
-        protected override Expression GetNestedNullCheckExpression(ParameterExpression parameter)
-        {  
-            var nullChecks = new List<Expression>();
-            var propNames = Path.Split('.');
-            var property = Expression.Property(parameter, propNames[0]);
-
-            var nullCheck = Expression.NotEqual(property, NullConstant);
-            nullChecks.Add(nullCheck);
-
-            for (int i = 1; i < propNames.Length; i++)
-            {
-                property = Expression.Property(property, propNames[i]);
-                nullCheck = Expression.NotEqual(property, NullConstant);
-                nullChecks.Add(nullCheck);                    
-            }
-
-            var aggregatedNullChecks = nullChecks.Aggregate((cur, next) => Expression.AndAlso(cur, next));
-            return aggregatedNullChecks;
-        }
-
-        protected override MemberExpression GetPropertyExpression(ParameterExpression parameter, PropertyInfo filterPropertyInfo)
+    protected override MemberExpression GetPropertyExpression(ParameterExpression parameter, PropertyInfo filterPropertyInfo)
+    {
+        var propNames = Path.Split('.');
+            
+        var property = Expression.Property(parameter, propNames[0]);
+            
+        for (int i = 1; i < propNames.Length; i++)
         {
-            var propNames = Path.Split('.');
-            
-            var property = Expression.Property(parameter, propNames[0]);
-            
-            for (int i = 1; i < propNames.Length; i++)
-            {
-                property = Expression.Property(property, propNames[i]);                
-            }
-
-            return Expression.Property(property, GetPropertyName(filterPropertyInfo));
+            property = Expression.Property(property, propNames[i]);                
         }
+
+        return Expression.Property(property, GetPropertyName(filterPropertyInfo));
     }
 }

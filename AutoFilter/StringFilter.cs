@@ -1,10 +1,9 @@
-﻿namespace AutoFilter
+﻿namespace AutoFilter;
+
+public enum StringFilterCondition
 {
-    public enum StringFilterCondition
-    {
-        StartsWith,
-        Contains,
-        Equals,
-        EndsWith
-    }
+    StartsWith,
+    Contains,
+    Equals,
+    EndsWith
 }
