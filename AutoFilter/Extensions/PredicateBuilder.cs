@@ -53,13 +53,7 @@ namespace AutoFilter.Extensions
         public static Expression<T> Compose<T>(this LambdaExpression first, LambdaExpression second,
             Func<Expression, Expression, Expression> merge)
         {
-            // zip parameters (map from parameters of second to parameters of first)
-            var map = first.Parameters
-                .Select((f, i) => new { f, s = second.Parameters[i] })
-                .ToDictionary(p => p.s, p => p.f);
-
-            // replace parameters in the second lambda expression with the parameters in the first
-            var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
+            var secondBody = ReplaceParameterExpressionVisitor.ReplaceParameters(first.Parameters.First(), second.Parameters.First(), second.Body);
 
             // create a merged lambda expression with parameters from the first expression
             return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
@@ -93,45 +87,43 @@ namespace AutoFilter.Extensions
 
         private static Expression Replace(this Expression expression, Expression searchEx, Expression replaceEx)
         {
-            return new ReplaceVisitor(searchEx, replaceEx).Visit(expression);
+            return new ReplaceExpressionVisitor(searchEx, replaceEx).Visit(expression);
         }
 
-        private class ReplaceVisitor : ExpressionVisitor
+        private class ReplaceExpressionVisitor : ExpressionVisitor
         {
             private readonly Expression _from, _to;
-            public ReplaceVisitor(Expression from, Expression to)
+
+            public ReplaceExpressionVisitor(Expression from, Expression to)
             {
                 _from = from;
                 _to = to;
             }
+
             public override Expression Visit(Expression node)
             {
                 return node == _from ? _to : base.Visit(node);
             }
         }
 
-        private class ParameterRebinder : ExpressionVisitor
+        private class ReplaceParameterExpressionVisitor : ExpressionVisitor
         {
-            readonly Dictionary<ParameterExpression, ParameterExpression> _map;
+            private readonly ParameterExpression _from, _to;
 
-            private ParameterRebinder(Dictionary<ParameterExpression, ParameterExpression> map)
+            private ReplaceParameterExpressionVisitor(ParameterExpression from, ParameterExpression to)
             {
-                _map = map ?? new Dictionary<ParameterExpression, ParameterExpression>();
+                _from = from;
+                _to = to;
             }
             
-            public static Expression ReplaceParameters(Dictionary<ParameterExpression, ParameterExpression> map, Expression exp)
+            public static Expression ReplaceParameters(ParameterExpression from, ParameterExpression to, Expression exp)
             {
-                return new ParameterRebinder(map).Visit(exp);
+                return new ReplaceParameterExpressionVisitor(from, to).Visit(exp);
             }
 
             protected override Expression VisitParameter(ParameterExpression p)
             {
-                if (_map.TryGetValue(p, out var replacement))
-                {
-                    p = replacement;
-                }
-
-                return base.VisitParameter(p);
+                return p == _from ? _to : base.Visit(p);
             }
         }
     }
