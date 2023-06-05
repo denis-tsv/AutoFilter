@@ -56,10 +56,8 @@ public class FilterPropertyAttribute : Attribute
         if (@from != null)
         {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
-            Expression value = Expression.Constant(@from);
-            if (value.Type != property.Type)
-                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
-
+            Expression value = Expression.Constant(@from, property.Type);
+            
             fromExpr = GetBody(property, value, inMemory, FilterCondition.GreaterOrEqual);
 
             fromExpr = AddNullChecks(fromExpr, inMemory, parameter, property);
@@ -70,9 +68,7 @@ public class FilterPropertyAttribute : Attribute
         if (@to != null)
         {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
-            Expression value = Expression.Constant(@to);
-            if (value.Type != property.Type)
-                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+            Expression value = Expression.Constant(@to, property.Type);
             toExpr = GetBody(property, value, inMemory, FilterCondition.LessOrEqual);
             toExpr = AddNullChecks(toExpr, inMemory, parameter, property);
 
@@ -105,9 +101,7 @@ public class FilterPropertyAttribute : Attribute
         var property = GetPropertyExpression(parameter, filterPropertyInfo);
         var propertyValue = GetPropertyValue(filterPropertyValue, filter);
 
-        Expression value = Expression.Constant(propertyValue);
-        if (value.Type != property.Type)
-            value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+        Expression value = Expression.Constant(propertyValue, property.Type);
 
         var body = GetBody(property, value, inMemory);
 
