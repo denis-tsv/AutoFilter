@@ -102,7 +102,7 @@ public class ProductController : Controller
 
 ## String comparison
 
-AutoFilter allows to compare strings using StartsWith, Contains and Equals modes. StartsWith mode is default. To enable Contains or Equals mode you need to add FilterProperty attribute to corresponding property of filter DTO.
+AutoFilter allows to compare strings using StartsWith, EndsWith, Contains, Equals modes. StartsWith mode is default. To enable EndsWith, Contains or Equals mode you need to add FilterProperty attribute to corresponding property of filter DTO.
 
 ```csharp
 public class ProductFilter
@@ -199,16 +199,16 @@ AutoFilter allows to filter by item in list of values. Both array and IEnumerabl
 public class Product
 {
     public ProductStatus Status { get; set; } // Some enum
-	public string? Code { get; set; } 
-	public int? Value { get; set; } 
+    public string? Code { get; set; } 
+    public int? Value { get; set; } 
 }
 
 
 public class ProductFilter
 {
     public ProductStatus[]? Status { get; set; }
-	public List<string>? Code { get; set; }
-	public IEnumerable<int>? Value { get; set; }
+    public List<string>? Code { get; set; }
+    public IEnumerable<int>? Value { get; set; }
 }
 ```
 
