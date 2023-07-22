@@ -9,6 +9,7 @@
     <RepositoryUrl>https://github.com/denis-tsv/AutoFilter</RepositoryUrl>
     <PackageTags>filter;automatic;specification;expression;linq</PackageTags>
     <PackageProjectUrl>https://github.com/denis-tsv/AutoFilter</PackageProjectUrl>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright Denis Tsvettsikh</Copyright>
     <Description>AutoFilter allows to generate LinqExpression by DTO and pass this expression to ORM for SQL generation and database filtration or compile expression to delegate for in-memory filtration</Description>
