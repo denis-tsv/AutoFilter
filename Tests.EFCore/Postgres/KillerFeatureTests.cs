@@ -12,17 +12,17 @@ using Xunit;
 
 namespace Tests.EF
 {
-    public class KillerFeatureTests : TestBase
+    public class KillerFeatureTests 
     {
         [Fact]
         public void ScalarCombination()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             Expression<Func<NestedItem, bool>> ex = (x) => x.Int > 1;
             
             // act
-            var filtered = Context.NavigationPropertyItems
+            var filtered = context.NavigationPropertyItems
                 .Include(x => x.NestedItem)
                 .Where(x => x.NestedItem, ex) // filter by nested property
                 .ToList();
@@ -35,11 +35,11 @@ namespace Tests.EF
         public void CollectionCombination()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             Expression<Func<NavigationPropertyItem, bool>> ex = (x) => x.Id > 3;
 
             // act
-            var filtered = Context.NestedItems
+            var filtered = context.NestedItems
                 .Include(x => x.NavigationPropertyItems)
                 .WhereAny(x => x.NavigationPropertyItems, ex) // filter by nested collection
                 .ToList();

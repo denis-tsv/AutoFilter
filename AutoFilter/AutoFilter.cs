@@ -56,10 +56,11 @@ public class AutoFilter
             .Where(x => x.PropertyValueGetter.Invoke(filter) != null)
             .ToList();
 
+        var filterConst = Expression.Constant(filter);
         var result = new List<Expression>(capacity: filterProps.Count);
         foreach (var filterProperty in filterProps)
         {
-            var propertyExpression = filterProperty.FilterPropertyAttribute.GetExpression(parameter, inMemory, filterProperty.PropertyInfo, filterProperty.PropertyValueGetter(filter)!, filter!);
+            var propertyExpression = filterProperty.FilterPropertyAttribute.GetExpression(parameter, inMemory, filterProperty.PropertyInfo, filterProperty.PropertyValueGetter(filter)!, filter!, filterConst);
             result.Add(propertyExpression);
         }
         return result;

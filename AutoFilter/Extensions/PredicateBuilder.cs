@@ -53,7 +53,7 @@ public static class PredicateBuilder
     public static Expression<T> Compose<T>(this LambdaExpression first, LambdaExpression second,
         Func<Expression, Expression, Expression> merge)
     {
-        var secondBody = ReplaceParameterExpressionVisitor.ReplaceParameters(first.Parameters.First(), second.Parameters.First(), second.Body);
+        var secondBody = ReplaceParameterExpressionVisitor.ReplaceParameters(second.Parameters.First(), first.Parameters.First(), second.Body);
 
         // create a merged lambda expression with parameters from the first expression
         return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);

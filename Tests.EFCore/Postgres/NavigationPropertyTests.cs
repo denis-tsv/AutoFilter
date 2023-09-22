@@ -10,17 +10,17 @@ using Xunit;
 
 namespace Tests.EF
 {
-    public class NavigationPropertyTests : TestBase
+    public class NavigationPropertyTests 
     {
         [Fact]
         public void IntEqual()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new NavigationPropertyFilter { Int = 1 };
 
             //act
-            var filtered = Context.NavigationPropertyItems.Include(x => x.NestedItem).AutoFilter(filter).ToList();
+            var filtered = context.NavigationPropertyItems.Include(x => x.NestedItem).AutoFilter(filter).ToList();
 
             //assert
             Assert.Equal(1, filtered.Count);
@@ -31,11 +31,11 @@ namespace Tests.EF
         public void NullableIntGreatOrEqual()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new NavigationPropertyFilter { NullableIntFilter = 1 };
 
             //act
-            var filtered = Context.NavigationPropertyItems
+            var filtered = context.NavigationPropertyItems
                 .Include(x => x.NestedItem)
                 .AutoFilter(filter)
                 .OrderBy(x => x.NestedItem.NullableInt)
@@ -51,11 +51,11 @@ namespace Tests.EF
         public void NestedString()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new NavigationPropertyFilter { StringFilter = "Nested" };
 
             //act
-            var filtered = Context.NavigationPropertyItems.Include(x => x.NestedItem).AutoFilter(filter).ToList();
+            var filtered = context.NavigationPropertyItems.Include(x => x.NestedItem).AutoFilter(filter).ToList();
 
             //assert
             Assert.Equal(1, filtered.Count);

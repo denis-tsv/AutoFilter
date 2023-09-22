@@ -84,6 +84,15 @@ public class ProductController : Controller
 }
 ```
 
+AutoFilter will produce Expression which will be converted to SQL Query with parameters like this. SQL query parameters allows to awoid SQL injections and remove sensitive data like passport number or bank card number from logs at production environment.
+
+```sql
+SELECT p."Name", p."Cost" 
+FROM Product p
+WHERE p."Name" IS NOT NULL AND p."Name" LIKE $1 || '%' AND p."Cost" >= $2 AND p."Cost" <= $3
+```
+
+
 AutoFilter allows not only create a LINQ Expression for ORM but it also allows to create an expression to filter objects in memory. Expression for in memory filtering using IEnumerable will contain null checks for string and navigation properties unlike expression for ORM filtering using IQuerable. For in-memory filtration expression will be compiled to delegate.
 
 ```csharp
@@ -271,37 +280,6 @@ public class ProductFilter
 {
     [NavigationProperty("Producer.Country", TargetPropertyName = "Name")] 
     public string? ProducerCountryName { get; set; }
-}
-```
-
-## Converter
-
-If value type in filter DTO does not correspond to value in entity property (for example, filter property contains enum's name but entity property contains enum's value) then you have to use converter. You need to implement IFilterValueConverter interface and use ConvertFilter attribute to specify this implementation for property of filter DTO.
-
-```csharp
-public enum ProductState
-{
-    Available,
-    NotAvailable
-}
-
-public class Product
-{
-    public ProductState State { get; set; }
-}
-
-public class StringToEnumConverter : IFilterValueConverter
-{
-    public object Convert(object value)
-    {
-        return Enum.Parse(typeof(ProductState), (string)value);
-    }
-}
-
-public class ProductFilter
-{
-    [ConvertFilter(typeof(StringToEnumConverter))] 
-    public string? State { get; set; }
 }
 ```
 

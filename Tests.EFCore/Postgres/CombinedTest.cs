@@ -7,22 +7,22 @@ using Tests.Data;
 
 namespace Tests
 {
-    public class CombinedTest : TestBase
+    public class CombinedTest
     {
         [Fact]
         public void TestSqlAndInMemoryQuery()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new StringFilter { NoAttribute = "NoAttribute" };
 
             //act
-            var filteredDatabase = Context.StringTestItems.AutoFilter(filter).ToList();
+            var filteredDatabase = context.StringTestItems.AutoFilter(filter).ToList();
             var filteredInMemory = StringTestsData.Items.AutoFilter(filter).ToList();
 
 
             //assert
-            Assert.Equal(2, filteredDatabase.Count);
+            Assert.Equal(1, filteredDatabase.Count);
             Assert.Equal(1, filteredInMemory.Count);
         }
     }

@@ -5,20 +5,20 @@ using System.Linq;
 
 namespace Tests.EF
 {
-    public class NotAutoFilteredTests : TestBase
+    public class NotAutoFilteredTests 
     {
         [Fact]
         public void NotAutoFiltered()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new NotAutoFilteredFilter { NotFiltered = 1 };
 
             //act
-            var filtered = Context.NotAutoFilteredItems.AutoFilter(filter).ToList();
+            var filtered = context.NotAutoFilteredItems.AutoFilter(filter).ToList();
 
             //assert
-            Assert.Equal(Context.NotAutoFilteredItems.Count(), filtered.Count);
+            Assert.Equal(context.NotAutoFilteredItems.Count(), filtered.Count);
         }
     }
 }

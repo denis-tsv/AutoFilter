@@ -6,17 +6,17 @@ using Xunit;
 
 namespace Tests.EF
 {
-    public class RangeTests : TestBase
+    public class RangeTests 
     {
         [Fact]
         public void IntFrom()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new RangeFilter { IntValue = new Range<int> { From = 15 } };
 
             //act
-            var filtered = Context.RangeFilterItems.AutoFilter(filter);
+            var filtered = context.RangeFilterItems.AutoFilter(filter);
 
             //assert
             Assert.Equal(2, filtered.Count());
@@ -26,11 +26,11 @@ namespace Tests.EF
         public void IntTo()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new RangeFilter { IntValue = new Range<int> { To = 15 } };
 
             //act
-            var filtered = Context.RangeFilterItems.AutoFilter(filter);
+            var filtered = context.RangeFilterItems.AutoFilter(filter);
 
             //assert
             Assert.Equal(1, filtered.Count());
@@ -40,11 +40,11 @@ namespace Tests.EF
         public void IntFromTo()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new RangeFilter { IntValue = new Range<int> { From = 10, To = 15 } };
 
             //act
-            var filtered = Context.RangeFilterItems.AutoFilter(filter);
+            var filtered = context.RangeFilterItems.AutoFilter(filter);
 
             //assert
             Assert.Equal(1, filtered.Count());
@@ -54,11 +54,11 @@ namespace Tests.EF
         public void DateTimeNestedFrom()
         {
             //arrange
-            Init();
-            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { From = new DateTime(2021, 01, 01) } };
+            var context = Shared.GetDbContext();
+            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { From = new DateTime(2021, 01, 01).ToUniversalTime() } };
 
             //act
-            var filtered = Context.RangeFilterItems.AutoFilter(filter);
+            var filtered = context.RangeFilterItems.AutoFilter(filter);
 
             //assert
             Assert.Equal(2, filtered.Count());
@@ -68,11 +68,11 @@ namespace Tests.EF
         public void DateTimeNestedTo()
         {
             //arrange
-            Init();
-            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { To = new DateTime(2021, 01, 01) } };
+            var context = Shared.GetDbContext();
+            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { To = new DateTime(2021, 01, 01).ToUniversalTime() } };
 
             //act
-            var filtered = Context.RangeFilterItems.AutoFilter(filter);
+            var filtered = context.RangeFilterItems.AutoFilter(filter);
 
             //assert
             Assert.Equal(2, filtered.Count());
@@ -82,18 +82,18 @@ namespace Tests.EF
         public void DateTimeNestedFromTo()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new RangeFilter
             {
                 DateTimeValue = new Range<DateTime>
                 {
-                    From = new DateTime(2021, 02, 01),
-                    To = new DateTime(2022, 01, 01)
+                    From = new DateTime(2021, 02, 01).ToUniversalTime(),
+                    To = new DateTime(2022, 01, 01).ToUniversalTime()
                 }
             };
 
             //act
-            var filtered = Context.RangeFilterItems.AutoFilter(filter);
+            var filtered = context.RangeFilterItems.AutoFilter(filter);
 
             //assert
             Assert.Equal(1, filtered.Count());

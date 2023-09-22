@@ -15,8 +15,8 @@
     <Description>AutoFilter allows to generate LinqExpression by DTO and pass this expression to ORM for SQL generation and database filtration or compile expression to delegate for in-memory filtration</Description>
     <Product>AutoFilter.Sql</Product>
     <PackageId>AutoFilter.Sql</PackageId>
-    <Version>1.0.8</Version>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <Version>2.0.0</Version>
+    <PackageReleaseNotes>Pass filter values as SQL query parameters. Removed value converters.</PackageReleaseNotes>
     <PackageIcon>logo-128x128.png</PackageIcon>
   </PropertyGroup>
 

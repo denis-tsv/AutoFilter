@@ -35,18 +35,18 @@ public class FilterPropertyAttribute : Attribute
 
     public FilterCondition FilterCondition { get; set; } = DefaultFilterCondition;
 
-    public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
+    public virtual Expression GetExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter, Expression filterExpression)
     {
         if (filterPropertyValue is IRange range)
-            return GetRangeExpression(parameter, inMemory, filterPropertyInfo, range, filter);
+            return GetRangeExpression(parameter, inMemory, filterPropertyInfo, range, filter, filterExpression);
 
         if (filterPropertyValue is IEnumerable items && filterPropertyValue.GetType() != typeof(string))
             return GetEnumerableExpression(parameter, inMemory, filterPropertyInfo, items, filter);
 
-        return GetScalarExpression(parameter, inMemory, filterPropertyInfo, filterPropertyValue, filter);
+        return GetScalarExpression(parameter, inMemory, filterPropertyInfo, filterPropertyValue, filter, filterExpression);
     }
 
-    protected Expression GetRangeExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, IRange range, object filter)
+    protected Expression GetRangeExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, IRange range, object filter, Expression filterExpression)
     {
         var @from = range.From;
         var @to = range.To;
@@ -56,7 +56,10 @@ public class FilterPropertyAttribute : Attribute
         if (@from != null)
         {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
-            Expression value = Expression.Constant(@from, property.Type);
+            Expression value = Expression.Property(filterExpression, filterPropertyInfo);
+            value = Expression.Property(value, nameof(IRange.From));
+            if (value.Type != property.Type)
+                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
             
             fromExpr = GetBody(property, value, inMemory, FilterCondition.GreaterOrEqual);
 
@@ -68,8 +71,13 @@ public class FilterPropertyAttribute : Attribute
         if (@to != null)
         {
             var property = GetPropertyExpression(parameter, filterPropertyInfo);
-            Expression value = Expression.Constant(@to, property.Type);
+            Expression value = Expression.Property(filterExpression, filterPropertyInfo);
+            value = Expression.Property(value, nameof(IRange.To));
+            if (value.Type != property.Type)
+                value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+            
             toExpr = GetBody(property, value, inMemory, FilterCondition.LessOrEqual);
+            
             toExpr = AddNullChecks(toExpr, inMemory, parameter, property);
 
             if (@from == null) return toExpr;
@@ -96,13 +104,15 @@ public class FilterPropertyAttribute : Attribute
         return result;
     }
 
-    protected Expression GetScalarExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter)
+    protected Expression GetScalarExpression(ParameterExpression parameter, bool inMemory, PropertyInfo filterPropertyInfo, object filterPropertyValue, object filter, Expression filterExpression)
     {
         var property = GetPropertyExpression(parameter, filterPropertyInfo);
         var propertyValue = GetPropertyValue(filterPropertyValue, filter);
 
-        Expression value = Expression.Constant(propertyValue, property.Type);
-
+        Expression value = Expression.Property(filterExpression, filterPropertyInfo);
+        if (value.Type != property.Type)
+            value = Expression.Convert(value, property.Type); //to convert from enum to object or from int? to int
+        
         var body = GetBody(property, value, inMemory);
 
         body = AddNullChecks(body, inMemory, parameter, property);

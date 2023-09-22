@@ -4,20 +4,20 @@ using System.Linq;
 
 namespace Tests.EF
 {
-    public class OrderByTests : TestBase
+    public class OrderByTests
     {
         [Fact]
         public void OrderBy()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var propertyName = "NoAttribute";
 
             //act
-            var orderedAuto = Context.StringTestItems
+            var orderedAuto = context.StringTestItems
                 .OrderBy(propertyName).ToList();
 
-            var orderedManual = Context.StringTestItems
+            var orderedManual = context.StringTestItems
                 .OrderBy(x => x.NoAttribute).ToList();
 
             //assert
@@ -30,14 +30,14 @@ namespace Tests.EF
         public void OrderByDescending()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var propertyName = "IntGreaterOrEqual";
 
             //act
-            var orderedAuto = Context.FilterConditionItems
+            var orderedAuto = context.FilterConditionItems
                 .OrderByDescending(propertyName).ToList();
 
-            var orderedManual = Context.FilterConditionItems
+            var orderedManual = context.FilterConditionItems
                 .OrderByDescending(x => x.IntGreaterOrEqual).ToList();
 
             //assert

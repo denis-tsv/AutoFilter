@@ -16,21 +16,21 @@ namespace Tests.Data
             {
                 NestedItem = new RangeFilterNestedItem
                 {
-                    DateTimeValue = new DateTime(2020, 01, 01)
+                    DateTimeValue = new DateTime(2020, 01, 01).ToUniversalTime()
                 }
             },
             new RangeFilterItem
             {
                 NestedItem = new RangeFilterNestedItem
                 {
-                    DateTimeValue = new DateTime(2021, 01, 01)
+                    DateTimeValue = new DateTime(2021, 01, 01).ToUniversalTime()
                 }
             },
             new RangeFilterItem
             {
                 NestedItem = new RangeFilterNestedItem
                 {
-                    DateTimeValue = new DateTime(2022, 01, 01)
+                    DateTimeValue = new DateTime(2022, 01, 01).ToUniversalTime()
                 }
             },
         };

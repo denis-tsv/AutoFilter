@@ -39,15 +39,15 @@ namespace Tests.Data
             //DateTimeLessOrEqual
             new FilterConditionItem
             {
-                DateTimeLessOrEqual = new DateTime(2010, 10, 23, 14, 56, 54)
+                DateTimeLessOrEqual = new DateTime(2010, 10, 23, 14, 56, 54).ToUniversalTime()
             },
             new FilterConditionItem
             {
-                DateTimeLessOrEqual = new DateTime(2015, 10, 10)
+                DateTimeLessOrEqual = new DateTime(2015, 10, 10).ToUniversalTime()
             },
             new FilterConditionItem
             {
-                DateTimeLessOrEqual = new DateTime(2010, 10, 23)
+                DateTimeLessOrEqual = new DateTime(2010, 10, 23).ToUniversalTime()
             },
 
             //DecimalLess

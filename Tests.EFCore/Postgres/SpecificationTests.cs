@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Tests.EF
 {
-    public class SpecificationTests : TestBase
+    public class SpecificationTests
     {
         private Spec<FilterConditionItem> _intGreatOrEqual1 = new Spec<FilterConditionItem>(x => x.IntGreaterOrEqual >= 1);
         
@@ -14,10 +14,10 @@ namespace Tests.EF
         {
             //arrange
             var boolIsEmpty = new Spec<FilterConditionItem>(x => !x.BoolEqual.HasValue);
-            Init();
+            var context = Shared.GetDbContext();
             
             //act
-            var filtered = Context.FilterConditionItems.Where(_intGreatOrEqual1 && boolIsEmpty).ToList();
+            var filtered = context.FilterConditionItems.Where(_intGreatOrEqual1 && boolIsEmpty).ToList();
 
             //assert
             Assert.Equal(2, filtered.Count);
@@ -27,11 +27,11 @@ namespace Tests.EF
         public void OrTest()
         {
             //arrange 
-            var _decimalless0 = new Spec<FilterConditionItem>(x => x.DecimalLess < 0);
-            Init();
+            var _decimalless0 = new Spec<FilterConditionItem>(y => y.DecimalLess < 0);
+            var context = Shared.GetDbContext();
 
             //act
-            var filtered = Context.FilterConditionItems.Where(_intGreatOrEqual1 || _decimalless0).ToList();
+            var filtered = context.FilterConditionItems.Where(_intGreatOrEqual1 || _decimalless0).ToList();
 
             //assert
             Assert.Equal(4, filtered.Count);
@@ -41,11 +41,11 @@ namespace Tests.EF
         public void NotTest()
         {
             //arrange 
-            Init();
+            var context = Shared.GetDbContext();
             var _decimalless1 = new Spec<FilterConditionItem>(x => x.DecimalLess < 1);
 
             //act
-            var filtered = Context.FilterConditionItems.Where(!_decimalless1).ToList();
+            var filtered = context.FilterConditionItems.Where(!_decimalless1).ToList();
 
             //assert
             Assert.Equal(1, filtered.Count);

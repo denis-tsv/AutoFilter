@@ -53,7 +53,7 @@ namespace Tests.InMemory
         public void DateTimeNestedFrom()
         {
             //arrange
-            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { From = new DateTime(2021, 01, 01) } };
+            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { From = new DateTime(2021, 01, 01).ToUniversalTime() } };
 
             //act
             var filtered = RangeData.Items.AutoFilter(filter);
@@ -66,7 +66,7 @@ namespace Tests.InMemory
         public void DateTimeNestedTo()
         {
             //arrange
-            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { To = new DateTime(2021, 01, 01) } };
+            var filter = new RangeFilter { DateTimeValue = new Range<DateTime> { To = new DateTime(2021, 01, 01).ToUniversalTime() } };
 
             //act
             var filtered = RangeData.Items.AutoFilter(filter);
@@ -81,8 +81,8 @@ namespace Tests.InMemory
             //arrange
             var filter = new RangeFilter { DateTimeValue = new Range<DateTime>
             {
-                From = new DateTime(2021, 02, 01),
-                To = new DateTime(2022, 01, 01)
+                From = new DateTime(2021, 02, 01).ToUniversalTime(),
+                To = new DateTime(2022, 01, 01).ToUniversalTime()
             } };
 
             //act

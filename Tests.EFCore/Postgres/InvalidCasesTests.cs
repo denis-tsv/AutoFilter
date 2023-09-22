@@ -3,23 +3,23 @@ using Xunit;
 using AutoFilter;
 using System.Linq;
 using System;
-using Tests.Data;
 
-namespace Tests.InMemory
+namespace Tests.EF
 {
-    public class InvalidCasesTests
+    public class InvalidCasesTests 
     {
         [Fact]
         public void NotExistsProperty()
         {
             //arrange
+            var context = Shared.GetDbContext();
             var filter = new InvalidCaseFilter { NotExistsProperty = "First" };
 
             //act
-            var result = InvalidCasesTestsData.Items.AutoFilter(filter).ToList();
+            var result = context.InvalidCaseItems.AutoFilter(filter).ToList();
 
-            //assert
-            Assert.Equal(InvalidCasesTestsData.Items.Count, result.Count);
+            //asssert
+            Assert.Equal(result.Count, context.InvalidCaseItems.Count());
         }
     }
 }

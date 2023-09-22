@@ -6,13 +6,13 @@ using Xunit;
 
 namespace Tests.EF
 {
-    public class EnumerableTests : TestBase
+    public class EnumerableTests 
     {
         [Fact]
         public void Enum()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new EnumerableFilter
             {
                 Enum = new List<TargetEnum> {
@@ -22,17 +22,17 @@ namespace Tests.EF
             };
 
             //act
-            var filtered = Context.EnumerableFilterItems.AutoFilter(filter).ToList();
+            var filtered = context.EnumerableFilterItems.AutoFilter(filter).ToList();
 
             //assert
-            Assert.Equal(filtered.Count, Context.EnumerableFilterItems.Count());
+            Assert.Equal(filtered.Count, context.EnumerableFilterItems.Count());
         }
 
         [Fact]
         public void NullableEnum()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new EnumerableFilter
             {
                 NullableEnum = new List<TargetEnum> {
@@ -42,7 +42,7 @@ namespace Tests.EF
             };
 
             //act
-            var filtered = Context.EnumerableFilterItems.AutoFilter(filter).ToList();
+            var filtered = context.EnumerableFilterItems.AutoFilter(filter).ToList();
 
             //assert
             Assert.Equal(2, filtered.Count);
@@ -52,14 +52,14 @@ namespace Tests.EF
         public void Int()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new EnumerableFilter
             {
                 Int = new int[] { 1, 2 }
             };
 
             //act
-            var filtered = Context.EnumerableFilterItems.AutoFilter(filter).ToList();
+            var filtered = context.EnumerableFilterItems.AutoFilter(filter).ToList();
 
             //assert
             Assert.Equal(1, filtered.Count);
@@ -70,14 +70,14 @@ namespace Tests.EF
         public void NullableInt()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new EnumerableFilter
             {
                 NullableInt = new[] { 1, 2 }
             };
 
             //act
-            var filtered = Context.EnumerableFilterItems.AutoFilter(filter).ToList();
+            var filtered = context.EnumerableFilterItems.AutoFilter(filter).ToList();
 
             //assert
             Assert.Equal(1, filtered.Count);
@@ -91,14 +91,14 @@ namespace Tests.EF
         public void String()
         {
             //arrange
-            Init();
+            var context = Shared.GetDbContext();
             var filter = new EnumerableFilter
             {
                 String = new List<string>{ "S1", "S2" }
             };
 
             //act
-            var filtered = Context.EnumerableFilterItems.AutoFilter(filter).ToList();
+            var filtered = context.EnumerableFilterItems.AutoFilter(filter).ToList();
 
             //assert
             Assert.Equal(2, filtered.Count);

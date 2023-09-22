@@ -44,7 +44,7 @@ namespace Tests.InMemory
         public void DateTimeLessOrEqual()
         {
             //arrange
-            var filter = new FilterConditionFilter { DateTimeLessOrEqual = new DateTime(2010, 10, 23, 14, 56, 54) };
+            var filter = new FilterConditionFilter { DateTimeLessOrEqual = new DateTime(2010, 10, 23, 14, 56, 54).ToUniversalTime() };
 
             //act
             var filtered = FilterConditionTestsData.Items.AutoFilter(filter)
@@ -53,8 +53,8 @@ namespace Tests.InMemory
 
             //assert
             Assert.Equal(2, filtered.Count);
-            Assert.Equal(new DateTime(2010, 10, 23), filtered[0].DateTimeLessOrEqual);
-            Assert.Equal(new DateTime(2010, 10, 23, 14, 56, 54), filtered[1].DateTimeLessOrEqual);            
+            Assert.Equal(new DateTime(2010, 10, 23).ToUniversalTime(), filtered[0].DateTimeLessOrEqual);
+            Assert.Equal(new DateTime(2010, 10, 23, 14, 56, 54).ToUniversalTime(), filtered[1].DateTimeLessOrEqual);            
         }
 
         [Fact]
