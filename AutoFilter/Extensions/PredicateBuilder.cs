@@ -102,7 +102,7 @@ public static class PredicateBuilder
 
         public override Expression Visit(Expression node)
         {
-            return node == _from ? _to : base.Visit(node);
+            return node == _from ? _to : node;
         }
     }
 
@@ -123,7 +123,7 @@ public static class PredicateBuilder
 
         protected override Expression VisitParameter(ParameterExpression p)
         {
-            return p == _from ? _to : base.Visit(p);
+            return p == _from ? _to : p;
         }
     }
 }
